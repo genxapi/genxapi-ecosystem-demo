@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1001,
+    "userId": 1,
+    "amount": 199.99,
+    "currency": "USD",
+    "status": "completed",
+    "method": "credit_card",
+    "transactionId": "txn_8f3a21c9",
+    "createdAt": "2025-02-01T10:15:00Z"
+  },
+  {
+    "id": 1002,
+    "userId": 2,
+    "amount": 49.50,
+    "currency": "USD",
+    "status": "completed",
+    "method": "paypal",
+    "transactionId": "txn_7b91de44",
+    "createdAt": "2025-02-02T14:22:00Z"
+  },
+  {
+    "id": 1003,
+    "userId": 3,
+    "amount": 15.00,
+    "currency": "USD",
+    "status": "failed",
+    "method": "credit_card",
+    "transactionId": "txn_5ac82f10",
+    "createdAt": "2025-02-03T09:05:00Z"
+  },
+  {
+    "id": 1004,
+    "userId": 1,
+    "amount": 9.99,
+    "currency": "USD",
+    "status": "completed",
+    "method": "stripe",
+    "transactionId": "txn_9dd73c61",
+    "createdAt": "2025-02-05T18:40:00Z"
+  },
+  {
+    "id": 1005,
+    "userId": 4,
+    "amount": 299.00,
+    "currency": "USD",
+    "status": "pending",
+    "method": "bank_transfer",
+    "transactionId": "txn_3fe91ab7",
+    "createdAt": "2025-02-06T12:10:00Z"
+  },
+  {
+    "id": 1006,
+    "userId": 5,
+    "amount": 75.25,
+    "currency": "USD",
+    "status": "completed",
+    "method": "credit_card",
+    "transactionId": "txn_2cd84aa9",
+    "createdAt": "2025-02-07T16:55:00Z"
+  },
+  {
+    "id": 1007,
+    "userId": 2,
+    "amount": 120.00,
+    "currency": "USD",
+    "status": "refunded",
+    "method": "paypal",
+    "transactionId": "txn_1aa72bc3",
+    "createdAt": "2025-02-08T11:33:00Z"
+  }
+]
