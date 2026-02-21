@@ -1,0 +1,52 @@
+:root {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: #0c0f12;
+  background: #f6f7f8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 64px 8vw;
+  background: radial-gradient(circle at top, #ffffff 0%, #f2f3f5 40%, #e8eaee 100%);
+}
+
+header {
+  max-width: 640px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  margin: 12px 0 8px;
+}
+
+.subhead {
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+.card {
+  margin-top: 32px;
+  padding: 24px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 12px 40px rgba(12, 15, 18, 0.1);
+}
+
+ul {
+  padding-left: 20px;
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "payments-service",
+  "projectType": "application",
+  "root": "apps/payments-service",
+  "sourceRoot": "apps/payments-service/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node -r ts-node/register -r tsconfig-paths/register src/main.ts",
+        "cwd": "apps/payments-service",
+        "env": {
+          "PORT": "3002"
+        }
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.build.json",
+        "cwd": "apps/payments-service"
+      }
+    }
+  },
+  "tags": []
+}

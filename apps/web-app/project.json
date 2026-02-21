@@ -1,0 +1,31 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "web-app",
+  "projectType": "application",
+  "root": "apps/web-app",
+  "sourceRoot": "apps/web-app/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite --host",
+        "cwd": "apps/web-app"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/web-app"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview --port 4200",
+        "cwd": "apps/web-app"
+      }
+    }
+  },
+  "tags": []
+}

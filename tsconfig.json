@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./apps/users-service/tsconfig.json" },
+    { "path": "./apps/payments-service/tsconfig.json" },
+    { "path": "./apps/web-app/tsconfig.json" },
+    { "path": "./apps/backoffice-app/tsconfig.json" },
+    { "path": "./apps/mobile-app/tsconfig.json" }
+  ]
+}

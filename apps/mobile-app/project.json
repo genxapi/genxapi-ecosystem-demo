@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "mobile-app",
+  "projectType": "application",
+  "root": "apps/mobile-app",
+  "sourceRoot": "apps/mobile-app",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm start",
+        "cwd": "apps/mobile-app"
+      }
+    }
+  },
+  "tags": []
+}

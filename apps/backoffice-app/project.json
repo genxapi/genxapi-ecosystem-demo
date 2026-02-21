@@ -1,0 +1,31 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "backoffice-app",
+  "projectType": "application",
+  "root": "apps/backoffice-app",
+  "sourceRoot": "apps/backoffice-app/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite --host",
+        "cwd": "apps/backoffice-app"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/backoffice-app"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview --port 4300",
+        "cwd": "apps/backoffice-app"
+      }
+    }
+  },
+  "tags": []
+}

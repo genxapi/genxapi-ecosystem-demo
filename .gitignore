@@ -1,0 +1,19 @@
+node_modules
+**/node_modules
+/dist
+/apps/**/dist
+/.nx/cache
+/.nx/workspace-data
+/.cache
+.vscode
+.DS_Store
+.env
+.env.*
+*.log
+
+# Expo
+apps/mobile-app/.expo
+apps/mobile-app/web-build
+
+# Swagger artifacts
+/docs/swagger/*.json

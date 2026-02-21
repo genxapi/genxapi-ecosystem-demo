@@ -1,0 +1,38 @@
+{
+  "name": "genxapi-ecosystem-demo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "nx": "nx",
+    "serve:users-service": "nx serve users-service",
+    "serve:payments-service": "nx serve payments-service",
+    "serve:web-app": "nx serve web-app",
+    "serve:backoffice-app": "nx serve backoffice-app",
+    "serve:mobile-app": "nx serve mobile-app",
+    "swagger:pull": "node tools/swagger/pull-swagger.mjs",
+    "graph": "nx graph"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.0",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "@nx/workspace": "latest",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "nx": "latest",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.5.0",
+    "vite": "^5.0.0"
+  }
+}
