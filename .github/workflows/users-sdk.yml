@@ -1,30 +1,27 @@
-name: Payments SDK
+name: users-sdk
 
 on:
   pull_request:
     paths:
-      - apps/payments-service/**
-      - genxapi.config.json
+      - apps/users-service/**
+      - genxapi.users.config.json
       - package.json
       - package-lock.json
       - .github/**
   push:
     paths:
-      - apps/payments-service/**
-      - genxapi.config.json
+      - apps/users-service/**
+      - genxapi.users.config.json
       - package.json
       - package-lock.json
       - .github/**
   workflow_dispatch:
     inputs:
       publish:
-        description: Publish the payments SDK to npm
+        description: Publish the users SDK to npm
         required: false
-        default: "false"
-        type: choice
-        options:
-          - "false"
-          - "true"
+        default: false
+        type: boolean
 
 jobs:
   generate:
@@ -40,18 +37,18 @@ jobs:
       - name: Generate SDK
         uses: ./.github/actions/genxapi-generate
         with:
-          config: genxapi.config.json
-          preGenerate: npm run swagger:export:payments
+          config: genxapi.users.config.json
+          preGenerate: npm run swagger:export:users
       - name: Upload SDK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: payments-sdk
-          path: sdk/payments-sdk
+          name: users-sdk
+          path: sdk/users-sdk
 
   publish:
     runs-on: ubuntu-latest
     needs: generate
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == 'true' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -59,8 +56,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://registry.npmjs.org
           cache: npm
+          registry-url: https://registry.npmjs.org
       - name: Verify npm token
         shell: bash
         env:
@@ -70,15 +67,16 @@ jobs:
             echo "Missing NPM_TOKEN secret. Add it to the repository secrets to publish."
             exit 1
           fi
-      - name: Install dependencies
-        run: npm ci
       - name: Generate SDK
-        run: npm run gen:sdk:payments
-      - name: Bump prerelease version
-        working-directory: sdk/payments-sdk
-        run: npm version prerelease --preid demo --no-git-tag-version
+        uses: ./.github/actions/genxapi-generate
+        with:
+          config: genxapi.users.config.json
+          preGenerate: npm run swagger:export:users
+      - name: Set demo version
+        working-directory: sdk/users-sdk
+        run: npm pkg set version="0.0.0-demo.${GITHUB_RUN_NUMBER}"
       - name: Publish SDK
-        working-directory: sdk/payments-sdk
+        working-directory: sdk/users-sdk
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public

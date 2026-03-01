@@ -11,7 +11,10 @@
     "serve:mobile-app": "nx serve mobile-app",
     "swagger:pull": "node tools/swagger/pull-swagger.mjs",
     "swagger:export:payments": "node -r ts-node/register -r tsconfig-paths/register apps/payments-service/src/export-swagger.ts",
+    "swagger:export:users": "nx run users-service:export-swagger",
+    "pregen:sdk:users": "npm run swagger:export:users",
     "gen:sdk:payments": "npx genxapi generate --log-level info",
+    "gen:sdk:users": "npx genxapi generate --config genxapi.users.config.json --log-level info",
     "graph": "nx graph"
   },
   "dependencies": {
