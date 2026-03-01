@@ -23,6 +23,7 @@
     {
       "name": "payments",
       "swagger": "./docs/swagger/payments-service.json",
+      "copySwagger": false,
       "config": {
         "baseUrl": "http://localhost:3002"
       }
@@ -30,7 +31,7 @@
   ],
   "hooks": {
     "beforeGenerate": [
-      "npm run swagger:export:payments"
+      "npm --prefix ../.. run swagger:export:payments"
     ]
   }
 }
