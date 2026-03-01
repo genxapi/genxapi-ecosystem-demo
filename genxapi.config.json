@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/genxapi/genxapi/main/schemas/genxapi.schema.json",
+  "project": {
+    "name": "genxapi-ecosystem-payments-sdk",
+    "directory": "./sdk/payments-sdk",
+    "template": "orval",
+    "output": "./src",
+    "config": {
+      "httpClient": "fetch",
+      "client": "fetch",
+      "mode": "split",
+      "mock": {
+        "type": "off"
+      }
+    },
+    "publish": {
+      "npm": {
+        "enabled": false
+      }
+    }
+  },
+  "clients": [
+    {
+      "name": "payments",
+      "swagger": "./docs/swagger/payments-service.json",
+      "config": {
+        "baseUrl": "http://localhost:3002"
+      }
+    }
+  ],
+  "hooks": {
+    "beforeGenerate": [
+      "npm run swagger:export:payments"
+    ]
+  }
+}

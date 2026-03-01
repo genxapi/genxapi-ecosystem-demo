@@ -52,6 +52,16 @@ npm run swagger:pull
 
 This writes the specs to `docs/swagger/`.
 
+## Payments SDK
+
+Local generation:
+
+```bash
+npm run gen:sdk:payments
+```
+
+CI uses the workflow named "Payments SDK". Use `workflow_dispatch` with `publish` set to `true` to publish the SDK.
+
 ## Nx Graph
 
 To visualize the workspace:

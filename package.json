@@ -10,6 +10,8 @@
     "serve:backoffice-app": "nx serve backoffice-app",
     "serve:mobile-app": "nx serve mobile-app",
     "swagger:pull": "node tools/swagger/pull-swagger.mjs",
+    "swagger:export:payments": "node -r ts-node/register -r tsconfig-paths/register apps/payments-service/src/export-swagger.ts",
+    "gen:sdk:payments": "npx genxapi generate --log-level info",
     "graph": "nx graph"
   },
   "dependencies": {
@@ -24,6 +26,8 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
+    "@genxapi/cli": "latest",
+    "@genxapi/template-orval": "latest",
     "@nx/workspace": "latest",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
