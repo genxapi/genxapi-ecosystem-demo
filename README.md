@@ -79,6 +79,10 @@ npm run gen:sdk:users
 
 CI uses the "users-sdk" workflow. Use `workflow_dispatch` with `publish` set to `true` to publish the SDK.
 
+## Local SDK Dependencies
+
+The repo targets published SDK versions for production installs. If you need to run the genxapi-generate action before the SDKs are published, set the action input `useLocalSdk: "true"` so it temporarily rewrites dependencies to use the local SDK sources for that CI job.
+
 ## Nx Graph
 
 To visualize the workspace:

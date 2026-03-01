@@ -8,6 +8,10 @@ inputs:
     description: Command to run before SDK generation
     required: false
     default: ""
+  useLocalSdk:
+    description: Use local SDK packages when registry versions are not available
+    required: false
+    default: "false"
   logLevel:
     description: GenXAPI log level
     required: false
@@ -15,8 +19,19 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install dependencies
+    - name: Prepare local SDK overrides
+      if: ${{ inputs.useLocalSdk == 'true' }}
+      run: node tools/ci/use-local-sdk.mjs
+      shell: bash
+    - name: Install dependencies (registry)
+      if: ${{ inputs.useLocalSdk != 'true' }}
       run: npm ci
+      shell: bash
+      env:
+        NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+    - name: Install dependencies (local SDK)
+      if: ${{ inputs.useLocalSdk == 'true' }}
+      run: npm install --no-audit --no-fund --no-package-lock
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
