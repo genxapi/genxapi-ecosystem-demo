@@ -1,0 +1,181 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "summary": "Payments service health check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "operationId": "PaymentsController_getPayments",
+        "summary": "Return a list of all payments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Payment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/{id}": {
+      "get": {
+        "operationId": "PaymentsController_getUserPayments",
+        "summary": "Return all payments done by a specific user",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID of payments to retrieve",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Payment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Payments Service",
+    "description": "Payments service API for the genxapi ecosystem demo",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "HealthCheckResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok",
+            "description": "Service status",
+            "enum": [
+              "ok"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "example": "payments-service",
+            "description": "Service name",
+            "enum": [
+              "payments-service"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "service"
+        ]
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1001,
+            "description": "Unique payment identifier"
+          },
+          "userId": {
+            "type": "number",
+            "example": 1,
+            "description": "Foreign key referencing the user"
+          },
+          "amount": {
+            "type": "number",
+            "example": 199.99,
+            "description": "Payment amount"
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD",
+            "description": "ISO currency code"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "failed",
+              "refunded"
+            ],
+            "example": "completed"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "credit_card",
+              "paypal",
+              "bank_transfer",
+              "stripe"
+            ],
+            "example": "credit_card"
+          },
+          "transactionId": {
+            "type": "string",
+            "example": "txn_8f3a21c9",
+            "description": "External transaction reference"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2025-02-01T10:15:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "amount",
+          "currency",
+          "status",
+          "method",
+          "transactionId",
+          "createdAt"
+        ]
+      }
+    }
+  }
+}

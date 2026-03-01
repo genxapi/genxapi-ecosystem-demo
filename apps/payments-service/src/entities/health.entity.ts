@@ -4,13 +4,14 @@ export class HealthCheckResponse {
   @ApiProperty({
     example: 'ok',
     description: 'Service status',
-    type: 'ok',
+    enum: ['ok'],
   })
-  status = 'ok' as const;
+  status: 'ok' = 'ok';
 
   @ApiProperty({
-    example: 'user-service',
-    description: 'service name',
+    example: 'payments-service',
+    description: 'Service name',
+    enum: ['payments-service'],
   })
-  service = 'user-service' as const;
+  service: 'payments-service' = 'payments-service';
 }
