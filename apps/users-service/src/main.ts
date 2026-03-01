@@ -18,6 +18,8 @@ async function bootstrap() {
   const httpAdapter = app.getHttpAdapter().getInstance();
   httpAdapter.get('/swagger-json', (_req: unknown, res: any) => res.json(document));
 
+  app.enableCors();
+
   const port = Number(process.env.PORT || 3001);
   await app.listen(port);
   // eslint-disable-next-line no-console

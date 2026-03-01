@@ -37,6 +37,23 @@ nx serve backoffice-app
 nx serve mobile-app
 ```
 
+## Web App Demo Journey
+
+1. Start the services and web app:
+
+```bash
+nx serve users-service
+nx serve payments-service
+nx serve web-app
+```
+
+2. Visit the pages in the web app (default `http://localhost:4200`):
+
+- Dashboard: health status cards for users and payments services.
+- Users: searchable users list with navigation into user profiles.
+- User details: profile card plus that user’s payments, with computed insights.
+- Payments: full payments table with status and method filtering.
+
 ## Swagger
 
 - Users service Swagger UI: `http://localhost:3001/swagger`
