@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/genxapi/genxapi/main/schemas/genxapi.schema.json",
+  "logLevel": "info",
+  "project": {
+    "name": "@genxapi/ecosystem-users-sdk",
+    "directory": "./sdk/users-sdk",
+    "template": "orval",
+    "output": "./src",
+    "config": {
+      "httpClient": "fetch",
+      "client": "fetch",
+      "mode": "split",
+      "mock": {
+        "type": "off"
+      }
+    },
+    "publish": {
+      "npm": {
+        "enabled": false
+      }
+    }
+  },
+  "clients": [
+    {
+      "name": "users",
+      "swagger": "./docs/swagger/users-service.json",
+      "copySwagger": false,
+      "config": {
+        "baseUrl": "http://localhost:3001"
+      }
+    }
+  ],
+  "hooks": {
+    "beforeGenerate": [
+      "npm --prefix ../.. run swagger:export:users"
+    ]
+  }
+}

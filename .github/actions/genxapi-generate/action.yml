@@ -1,6 +1,13 @@
 name: GenXAPI Generate
-description: Generate the payments SDK with GenXAPI
+description: Generate SDKs with GenXAPI
 inputs:
+  config:
+    description: Path to the GenXAPI config file
+    required: true
+  preGenerate:
+    description: Command to run before SDK generation
+    required: false
+    default: ""
   logLevel:
     description: GenXAPI log level
     required: false
@@ -13,8 +20,12 @@ runs:
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-    - name: Generate payments SDK
-      run: npm run gen:sdk:payments
+    - name: Pre-generate step
+      if: ${{ inputs.preGenerate != '' }}
+      run: ${{ inputs.preGenerate }}
+      shell: bash
+    - name: Generate SDK
+      run: npx genxapi generate --config ${{ inputs.config }} --log-level ${{ inputs.logLevel }}
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/

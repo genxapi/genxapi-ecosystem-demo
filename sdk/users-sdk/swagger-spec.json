@@ -1,0 +1,168 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "summary": "Users service health check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_getUsers",
+        "summary": "Return a list of all users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_getUser",
+        "summary": "Return details of a specific user",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User ID to retrieve",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Users Service",
+    "description": "Users service API for the genxapi ecosystem demo",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "HealthCheckResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok",
+            "description": "Service status",
+            "enum": [
+              "ok"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "example": "users-service",
+            "description": "Service name",
+            "enum": [
+              "users-service"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "service"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "Unique identifier of the user"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Alice",
+            "description": "First name of the user"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Johnson",
+            "description": "Last name of the user"
+          },
+          "email": {
+            "type": "string",
+            "example": "alice.johnson@example.com",
+            "description": "Email address"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin",
+            "enum": [
+              "admin",
+              "manager",
+              "user"
+            ],
+            "description": "Role of the user"
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether the user is active"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-10T09:15:00Z",
+            "description": "Creation timestamp",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "role",
+          "isActive",
+          "createdAt"
+        ]
+      }
+    }
+  }
+}
