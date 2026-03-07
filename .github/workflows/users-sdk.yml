@@ -37,8 +37,8 @@ jobs:
       - name: Generate SDK
         uses: ./.github/actions/genxapi-generate
         with:
+          service: users
           config: genxapi.users.config.json
-          preGenerate: npm run swagger:export:users
       - name: Upload SDK artifact
         uses: actions/upload-artifact@v4
         with:
@@ -70,11 +70,11 @@ jobs:
       - name: Generate SDK
         uses: ./.github/actions/genxapi-generate
         with:
+          service: users
           config: genxapi.users.config.json
-          preGenerate: npm run swagger:export:users
-      - name: Set demo version
+      - name: Show resolved SDK version
         working-directory: sdk/users-sdk
-        run: npm pkg set version="0.0.0-demo.${GITHUB_RUN_NUMBER}"
+        run: npm pkg get version
       - name: Publish SDK
         working-directory: sdk/users-sdk
         env:

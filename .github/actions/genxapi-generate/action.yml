@@ -1,13 +1,12 @@
 name: GenXAPI Generate
 description: Generate SDKs with GenXAPI
 inputs:
+  service:
+    description: Service key used to map the generated SDK package
+    required: true
   config:
     description: Path to the GenXAPI config file
     required: true
-  preGenerate:
-    description: Command to run before SDK generation
-    required: false
-    default: ""
   useLocalSdk:
     description: Use local SDK packages when registry versions are not available
     required: false
@@ -35,12 +34,8 @@ runs:
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-    - name: Pre-generate step
-      if: ${{ inputs.preGenerate != '' }}
-      run: ${{ inputs.preGenerate }}
-      shell: bash
     - name: Generate SDK
-      run: npx genxapi generate --config ${{ inputs.config }} --log-level ${{ inputs.logLevel }}
+      run: node tools/sdk/generate-sdk.mjs ${{ inputs.service }} ${{ inputs.config }} ${{ inputs.logLevel }}
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/

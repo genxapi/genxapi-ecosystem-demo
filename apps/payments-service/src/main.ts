@@ -2,14 +2,15 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { PAYMENTS_SERVICE_CONTRACT } from './contract';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Payments Service')
-    .setDescription('Payments service API for the genxapi ecosystem demo')
-    .setVersion('0.1.0')
+    .setTitle(PAYMENTS_SERVICE_CONTRACT.title)
+    .setDescription(PAYMENTS_SERVICE_CONTRACT.description)
+    .setVersion(PAYMENTS_SERVICE_CONTRACT.version)
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

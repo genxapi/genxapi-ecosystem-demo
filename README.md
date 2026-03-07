@@ -45,6 +45,18 @@ At the current stage, the fully integrated consumer is `web-app`. The `backoffic
 
 This keeps the example aligned with the point of `genxapi.dev`: the interesting part is not only that Nx can coordinate projects, but that `genxapi` can sit in the middle of the contract-to-consumer loop.
 
+## Contract-Driven SDK Versioning
+
+This repo now also demonstrates the shift-left versioning story behind `genxapi`:
+
+- each backend service owns its contract version in `apps/*/src/contract.ts`
+- that version is written into the generated OpenAPI contract
+- `genxapi generate` produces the SDK from that contract
+- the SDK package version is then synced to the contract version
+- the publish workflow keeps that resolved package version instead of replacing it with a synthetic demo version
+
+That means a backend contract change can become an SDK package version that downstream consumers can adopt after publish.
+
 ## Try It Locally
 
 Recommended runtime:
@@ -84,6 +96,26 @@ Then open:
 4. `beforeGenerate` refreshes the service Swagger JSON through the Nx export targets.
 5. `genxapi` generates the SDKs.
 6. `web-app` runs against those locally generated SDK packages.
+
+## Try The Versioning Flow
+
+1. Make a contract change in one of the services.
+2. Bump that service version in `apps/users-service/src/contract.ts` or `apps/payments-service/src/contract.ts`.
+3. Regenerate the affected SDK:
+
+```bash
+nx run users-sdk:generate
+```
+
+or:
+
+```bash
+nx run payments-sdk:generate
+```
+
+4. Inspect the SDK package version in `sdk/*/package.json`.
+
+At that point the generated SDK package version matches the backend contract version. In a published workflow, downstream consumers would adopt that new version in their own `package.json`.
 
 ## Useful Commands
 
@@ -144,3 +176,5 @@ What is not integrated yet:
 ## More Detail
 
 For a fuller explanation of the current state, reasoning, and trial flow, see [docs/current-stage.md](docs/current-stage.md).
+
+For the contract-to-package-version flow, see [docs/contract-versioning.md](docs/contract-versioning.md).

@@ -4,15 +4,16 @@ import path from 'path';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { USERS_SERVICE_CONTRACT } from './contract';
 
 async function exportSwagger(): Promise<void> {
   const app = await NestFactory.create(AppModule, { logger: false });
 
   try {
     const config = new DocumentBuilder()
-      .setTitle('Users Service')
-      .setDescription('Users service API for the genxapi ecosystem demo')
-      .setVersion(process.env.API_VERSION ?? '0.1.0')
+      .setTitle(USERS_SERVICE_CONTRACT.title)
+      .setDescription(USERS_SERVICE_CONTRACT.description)
+      .setVersion(process.env.API_VERSION ?? USERS_SERVICE_CONTRACT.version)
       .build();
 
     const document = SwaggerModule.createDocument(app, config);

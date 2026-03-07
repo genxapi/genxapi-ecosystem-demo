@@ -8,7 +8,7 @@
     "generate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx genxapi generate --config genxapi.users.config.json --log-level info"
+        "command": "node tools/sdk/generate-sdk.mjs users genxapi.users.config.json info"
       },
       "outputs": [
         "{workspaceRoot}/sdk/users-sdk/src",

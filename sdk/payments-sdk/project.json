@@ -8,7 +8,7 @@
     "generate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx genxapi generate --log-level info"
+        "command": "node tools/sdk/generate-sdk.mjs payments genxapi.config.json info"
       },
       "outputs": [
         "{workspaceRoot}/sdk/payments-sdk/src",

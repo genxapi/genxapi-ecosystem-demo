@@ -25,6 +25,7 @@ The current demo includes:
   - generated from the users Swagger contract
 - `payments-sdk`
   - generated from the payments Swagger contract
+  - package version synced from the generated contract version
 - `web-app`
   - React consumer that uses the generated SDKs to render a real UI
 
@@ -47,6 +48,7 @@ That is why SDK generation is still owned by `genxapi` itself:
 - each SDK has a `genxapi` config
 - each config uses `beforeGenerate`
 - `beforeGenerate` refreshes the relevant Swagger JSON before generation
+- after generation, the SDK package version is synced from the generated contract version
 
 This matters because the value being demonstrated is not only "we can run commands in order". The value is that `genxapi` can own the contract-to-SDK workflow.
 
@@ -88,7 +90,8 @@ the system behaves like this:
 4. `genxapi` executes `beforeGenerate`
 5. `beforeGenerate` refreshes Swagger via the Nx Swagger export targets
 6. `genxapi` generates the SDK output
-7. `web-app` starts and consumes the generated SDK packages
+7. the SDK package version is synced from the generated contract version
+8. `web-app` starts and consumes the generated SDK packages
 
 That gives you a concrete local story:
 
@@ -161,6 +164,7 @@ nx graph
 - The SDKs are not mocked or manually written.
 - The consumer app imports the generated SDK packages directly.
 - `genxapi` still owns the SDK generation workflow through its config and hooks.
+- Contract version changes can flow through into SDK package version changes.
 - Nx adds local orchestration but does not replace the role of `genxapi`.
 - The example is runnable on a laptop without needing a package publish step first.
 
@@ -178,5 +182,4 @@ That makes this repository a useful example for teams evaluating whether `genxap
 - integrate `backoffice-app` with the same generated SDKs
 - integrate `mobile-app`
 - demonstrate environment-specific base URLs
-- demonstrate SDK publishing as a separate stage after local validation
 - show how contract changes propagate through the whole loop
