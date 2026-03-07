@@ -21,6 +21,13 @@
         "command": "tsc -p tsconfig.build.json",
         "cwd": "apps/payments-service"
       }
+    },
+    "export-swagger": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node -r ts-node/register -r tsconfig-paths/register src/export-swagger.ts",
+        "cwd": "apps/payments-service"
+      }
     }
   },
   "tags": []

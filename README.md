@@ -37,14 +37,18 @@ nx serve backoffice-app
 nx serve mobile-app
 ```
 
+For the local end-to-end demo, Nx can now refresh the generated SDKs and start the required processes with one command:
+
+```bash
+npm run serve:demo
+```
+
 ## Web App Demo Journey
 
 1. Start the services and web app:
 
 ```bash
-nx serve users-service
-nx serve payments-service
-nx serve web-app
+npm run serve:demo
 ```
 
 2. Visit the pages in the web app (default `http://localhost:4200`):
@@ -74,14 +78,22 @@ This writes the specs to `docs/swagger/`.
 Local generation:
 
 ```bash
-npm run gen:sdk:users
+nx run users-sdk:generate
 ```
 
 CI uses the "users-sdk" workflow. Use `workflow_dispatch` with `publish` set to `true` to publish the SDK.
 
+## Local Nx SDK Flow
+
+- `users-sdk` and `payments-sdk` are first-class Nx projects under `sdk/`.
+- Nx orchestrates the flow, but genxapi still owns SDK refresh through each config's `beforeGenerate` hook, including the Swagger export step.
+- `web-app` depends on both SDK projects, so `nx serve web-app` and `nx build web-app` trigger `genxapi generate` before starting.
+- The root workspace installs both SDK packages from `sdk/`, so a fresh local `npm install` does not depend on unpublished registry packages.
+- To refresh both SDKs without starting the app, run `npm run gen:sdks`.
+
 ## Local SDK Dependencies
 
-The repo targets published SDK versions for production installs. If you need to run the genxapi-generate action before the SDKs are published, set the action input `useLocalSdk: "true"` so it temporarily rewrites dependencies to use the local SDK sources for that CI job.
+The workspace now resolves both generated SDK packages locally by default so the full demo can run on a laptop without publishing either package first. The CI helper in `tools/ci/use-local-sdk.mjs` remains available for jobs that need to rewrite SDK package exports to source files.
 
 ## Nx Graph
 

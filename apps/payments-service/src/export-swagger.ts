@@ -16,12 +16,8 @@ async function exportSwagger(): Promise<void> {
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    const outputPath = path.resolve(
-      process.cwd(),
-      'docs',
-      'swagger',
-      'payments-service.json'
-    );
+    const repoRoot = path.resolve(__dirname, '..', '..', '..');
+    const outputPath = path.join(repoRoot, 'docs', 'swagger', 'payments-service.json');
 
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, JSON.stringify(document, null, 2), 'utf8');

@@ -18,7 +18,12 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "types": ["node"],
-    "paths": {}
+    "paths": {
+      "@genxapi/ecosystem-users-sdk": ["sdk/users-sdk/src/index.ts"],
+      "@genxapi/ecosystem-users-sdk/*": ["sdk/users-sdk/src/*"],
+      "genxapi-ecosystem-payments-sdk": ["sdk/payments-sdk/src/index.ts"],
+      "genxapi-ecosystem-payments-sdk/*": ["sdk/payments-sdk/src/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
