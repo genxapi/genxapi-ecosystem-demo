@@ -15,6 +15,7 @@
     "pregen:sdk:users": "npm run swagger:export:users",
     "gen:sdk:payments": "npx genxapi generate --log-level info",
     "gen:sdk:users": "npx genxapi generate --config genxapi.users.config.json --log-level info",
+    "gen:sdks": "npm run gen:sdk:users && npm run gen:sdk:payments",
     "graph": "nx graph"
   },
   "dependencies": {
