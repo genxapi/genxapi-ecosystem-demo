@@ -1,0 +1,36 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "payments-sdk",
+  "projectType": "library",
+  "root": "sdk/payments-sdk",
+  "sourceRoot": "sdk/payments-sdk/src",
+  "targets": {
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx genxapi generate --config genxapi.config.json --log-level info && node tools/sdk/normalize-generated-sdk.mjs sdk/payments-sdk"
+      },
+      "outputs": [
+        "{workspaceRoot}/sdk/payments-sdk/src",
+        "{workspaceRoot}/sdk/payments-sdk/swagger-spec.json"
+      ]
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
+      "options": {
+        "command": "npm run build",
+        "cwd": "sdk/payments-sdk"
+      },
+      "outputs": ["{workspaceRoot}/sdk/payments-sdk/dist"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "sdk/payments-sdk"
+      }
+    }
+  },
+  "tags": ["type:sdk"]
+}

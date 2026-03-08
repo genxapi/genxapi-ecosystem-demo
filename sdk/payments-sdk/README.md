@@ -6,7 +6,7 @@ This package contains generated API clients produced by `@genxapi/cli` using the
 
 | Client | OpenAPI Source | Base URL | Description |
 | ------ | -------------- | -------- | ----------- |
-| payments | [Payments Service](./docs/swagger/payments-service.json) | http://localhost:3002 | Payments service API for the genxapi ecosystem demo |
+| payments | [Payments Service](./docs/contracts/payments-service/latest.json) | http://localhost:3002 | Payments service API for the genxapi ecosystem demo |
 
 ## Usage
 

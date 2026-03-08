@@ -3,14 +3,16 @@ name: users-sdk
 on:
   pull_request:
     paths:
-      - apps/users-service/**
+      - docs/contracts/users-service/**
+      - sdk/users-sdk/**
       - genxapi.users.config.json
       - package.json
       - package-lock.json
       - .github/**
   push:
     paths:
-      - apps/users-service/**
+      - docs/contracts/users-service/**
+      - sdk/users-sdk/**
       - genxapi.users.config.json
       - package.json
       - package-lock.json
@@ -22,6 +24,15 @@ on:
         required: false
         default: false
         type: boolean
+      releaseType:
+        description: Version bump to apply before publishing
+        required: false
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
 jobs:
   generate:
@@ -38,7 +49,10 @@ jobs:
         uses: ./.github/actions/genxapi-generate
         with:
           config: genxapi.users.config.json
-          preGenerate: npm run swagger:export:users
+          sdkDirectory: sdk/users-sdk
+      - name: Build SDK package
+        working-directory: sdk/users-sdk
+        run: npm run build
       - name: Upload SDK artifact
         uses: actions/upload-artifact@v4
         with:
@@ -71,10 +85,13 @@ jobs:
         uses: ./.github/actions/genxapi-generate
         with:
           config: genxapi.users.config.json
-          preGenerate: npm run swagger:export:users
-      - name: Set demo version
+          sdkDirectory: sdk/users-sdk
+      - name: Build SDK package
         working-directory: sdk/users-sdk
-        run: npm pkg set version="0.0.0-demo.${GITHUB_RUN_NUMBER}"
+        run: npm run build
+      - name: Bump SDK package version
+        working-directory: sdk/users-sdk
+        run: npm version ${{ inputs.releaseType }} --no-git-tag-version
       - name: Publish SDK
         working-directory: sdk/users-sdk
         env:

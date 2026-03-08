@@ -22,16 +22,11 @@
   "clients": [
     {
       "name": "payments",
-      "swagger": "./docs/swagger/payments-service.json",
+      "swagger": "./docs/contracts/payments-service/latest.json",
       "copySwagger": false,
       "config": {
         "baseUrl": "http://localhost:3002"
       }
     }
-  ],
-  "hooks": {
-    "beforeGenerate": [
-      "npm --prefix ../.. run swagger:export:payments"
-    ]
-  }
+  ]
 }

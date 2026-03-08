@@ -3,14 +3,16 @@ name: Payments SDK
 on:
   pull_request:
     paths:
-      - apps/payments-service/**
+      - docs/contracts/payments-service/**
+      - sdk/payments-sdk/**
       - genxapi.config.json
       - package.json
       - package-lock.json
       - .github/**
   push:
     paths:
-      - apps/payments-service/**
+      - docs/contracts/payments-service/**
+      - sdk/payments-sdk/**
       - genxapi.config.json
       - package.json
       - package-lock.json
@@ -20,11 +22,17 @@ on:
       publish:
         description: Publish the payments SDK to npm
         required: false
-        default: "false"
+        default: false
+        type: boolean
+      releaseType:
+        description: Version bump to apply before publishing
+        required: false
+        default: patch
         type: choice
         options:
-          - "false"
-          - "true"
+          - patch
+          - minor
+          - major
 
 jobs:
   generate:
@@ -41,7 +49,10 @@ jobs:
         uses: ./.github/actions/genxapi-generate
         with:
           config: genxapi.config.json
-          preGenerate: npm run swagger:export:payments
+          sdkDirectory: sdk/payments-sdk
+      - name: Build SDK package
+        working-directory: sdk/payments-sdk
+        run: npm run build
       - name: Upload SDK artifact
         uses: actions/upload-artifact@v4
         with:
@@ -51,7 +62,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: generate
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == 'true' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,13 +81,17 @@ jobs:
             echo "Missing NPM_TOKEN secret. Add it to the repository secrets to publish."
             exit 1
           fi
-      - name: Install dependencies
-        run: npm ci
       - name: Generate SDK
-        run: npm run gen:sdk:payments
-      - name: Bump prerelease version
+        uses: ./.github/actions/genxapi-generate
+        with:
+          config: genxapi.config.json
+          sdkDirectory: sdk/payments-sdk
+      - name: Build SDK package
         working-directory: sdk/payments-sdk
-        run: npm version prerelease --preid demo --no-git-tag-version
+        run: npm run build
+      - name: Bump SDK package version
+        working-directory: sdk/payments-sdk
+        run: npm version ${{ inputs.releaseType }} --no-git-tag-version
       - name: Publish SDK
         working-directory: sdk/payments-sdk
         env:

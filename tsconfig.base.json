@@ -17,8 +17,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": ["node"],
-    "paths": {}
+    "types": ["node"]
   },
   "exclude": ["node_modules", "tmp"]
 }

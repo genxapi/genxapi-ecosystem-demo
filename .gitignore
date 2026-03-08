@@ -2,6 +2,7 @@ node_modules
 **/node_modules
 /dist
 /apps/**/dist
+/sdk/**/dist
 /.nx/cache
 /.nx/workspace-data
 /.cache

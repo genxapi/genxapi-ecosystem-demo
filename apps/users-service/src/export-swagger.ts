@@ -2,20 +2,15 @@ import 'reflect-metadata';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { buildUsersServiceSwaggerConfig } from './swagger';
 
 async function exportSwagger(): Promise<void> {
   const app = await NestFactory.create(AppModule, { logger: false });
 
   try {
-    const config = new DocumentBuilder()
-      .setTitle('Users Service')
-      .setDescription('Users service API for the genxapi ecosystem demo')
-      .setVersion(process.env.API_VERSION ?? '0.1.0')
-      .build();
-
-    const document = SwaggerModule.createDocument(app, config);
+    const document = SwaggerModule.createDocument(app, buildUsersServiceSwaggerConfig());
     const repoRoot = path.resolve(__dirname, '..', '..', '..');
     const outputPath = path.join(repoRoot, 'docs', 'swagger', 'users-service.json');
 

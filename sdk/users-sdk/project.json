@@ -1,0 +1,36 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "users-sdk",
+  "projectType": "library",
+  "root": "sdk/users-sdk",
+  "sourceRoot": "sdk/users-sdk/src",
+  "targets": {
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx genxapi generate --config genxapi.users.config.json --log-level info && node tools/sdk/normalize-generated-sdk.mjs sdk/users-sdk"
+      },
+      "outputs": [
+        "{workspaceRoot}/sdk/users-sdk/src",
+        "{workspaceRoot}/sdk/users-sdk/swagger-spec.json"
+      ]
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
+      "options": {
+        "command": "npm run build",
+        "cwd": "sdk/users-sdk"
+      },
+      "outputs": ["{workspaceRoot}/sdk/users-sdk/dist"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "sdk/users-sdk"
+      }
+    }
+  },
+  "tags": ["type:sdk"]
+}
