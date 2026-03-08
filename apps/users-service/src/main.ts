@@ -1,19 +1,13 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { USERS_SERVICE_CONTRACT } from './contract';
+import { buildUsersServiceSwaggerConfig } from './swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle(USERS_SERVICE_CONTRACT.title)
-    .setDescription(USERS_SERVICE_CONTRACT.description)
-    .setVersion(USERS_SERVICE_CONTRACT.version)
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, buildUsersServiceSwaggerConfig());
   SwaggerModule.setup('swagger', app, document);
 
   const httpAdapter = app.getHttpAdapter().getInstance();

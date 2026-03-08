@@ -1,10 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "declaration": false,
+    "declaration": true,
     "emitDeclarationOnly": false,
     "outDir": "dist",
-    "module": "ESNext"
+    "module": "ESNext",
+    "declarationDir": "dist/types"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

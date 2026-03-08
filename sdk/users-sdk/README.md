@@ -6,7 +6,7 @@ This package contains generated API clients produced by `@genxapi/cli` using the
 
 | Client | OpenAPI Source | Base URL | Description |
 | ------ | -------------- | -------- | ----------- |
-| users | [Users Service](./docs/swagger/users-service.json) | http://localhost:3001 | Users service API for the genxapi ecosystem demo |
+| users | [Users Service](./docs/contracts/users-service/latest.json) | http://localhost:3001 | Users service API for the genxapi ecosystem demo |
 
 ## Usage
 

@@ -10,7 +10,6 @@
     "serve:backoffice-app": "nx serve backoffice-app",
     "serve:mobile-app": "nx serve mobile-app",
     "serve:demo": "nx run-many --target=serve --projects=users-service,payments-service,web-app --parallel=3",
-    "swagger:pull": "node tools/swagger/pull-swagger.mjs",
     "swagger:export:payments": "nx run payments-service:export-swagger",
     "swagger:export:users": "nx run users-service:export-swagger",
     "gen:sdk:payments": "nx run payments-sdk:generate",

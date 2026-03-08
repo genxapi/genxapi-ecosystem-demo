@@ -1,107 +1,78 @@
-# Contract Versioning Flow
+# Contract And SDK Versioning
 
-This document describes the shift-left API client generation story that this example now demonstrates.
+This repository demonstrates a strict version ownership boundary.
 
-## Objective
+## Ownership Model
 
-When a backend contract changes, the SDK generated from that contract should not remain an ambiguous "latest" artifact. It should become a concrete package version that downstream consumers can adopt deliberately.
+- Backend service version:
+  owned by the backend service lifecycle
+- OpenAPI contract version:
+  aligned with the backend service version
+- SDK package version:
+  owned by the SDK release lifecycle
+- Consumer dependency version:
+  owned by the consuming application lifecycle
 
-That is the behavior this repository now models.
+The key correction is this:
 
-## Source Of Truth
+it is normal and desirable for the OpenAPI contract version to match the backend service version.
 
-Each backend service owns a contract descriptor:
+What must stay independent is the SDK package version.
 
-- `apps/users-service/src/contract.ts`
-- `apps/payments-service/src/contract.ts`
+## Service Version -> Contract Version
 
-Those files define:
+Each service resolves Swagger `info.version` from its own `package.json` version, with optional `API_VERSION` override support.
 
-- contract title
-- contract description
-- contract version
+That means the published contract artefact reflects the backend release version directly.
 
-When the backend introduces a contract change, the service contract version should be bumped there.
+Example:
 
-## What Happens After A Contract Change
+- `apps/users-service/package.json` version: `0.2.0`
+- published contract: `docs/contracts/users-service/0.2.0.json`
+- `docs/contracts/users-service/latest.json` also reports `info.version = 0.2.0`
 
-1. A backend service changes in a way that affects its API contract.
-2. The service contract version is bumped.
-3. `genxapi generate` runs for the corresponding SDK.
-4. The `beforeGenerate` hook refreshes the Swagger contract first.
-5. `genxapi` generates the SDK from the refreshed contract.
-6. The repo syncs the SDK package version to the generated contract version.
+## Contract Version != SDK Package Version
 
-That produces a direct chain:
+The SDK package version is intentionally not synced to the contract version.
 
-- backend contract version
-- generated OpenAPI version
-- generated SDK package version
+That means a users SDK release could look like:
+
+- backend service version: `0.2.0`
+- contract version: `0.2.0`
+- SDK package version: `0.5.0`
+
+This is valid because the SDK package is its own released product.
+
+The SDK can still be generated from a contract that reports `0.2.0`, but the package released to consumers follows SDK release ownership.
 
 ## Why This Matters
 
-This is the shift-left value:
+This boundary keeps responsibilities realistic:
 
-- contract changes are surfaced early
-- SDKs are regenerated immediately from the new contract
-- package versioning is tied to the contract, not added later as an unrelated release concern
-- downstream consumers can adopt a specific version instead of guessing what changed
+- backend teams do not give up release ownership to GenX API
+- contracts remain trustworthy release artefacts from the service lifecycle
+- SDK teams can version and publish clients independently
+- consumer applications can choose when to upgrade SDK dependencies
 
-## Local Demo Behavior
+## Local Demo Flow
 
-Locally, this repository still uses file-based SDK dependencies so the demo can run without publishing packages first.
+To see the contract side:
 
-That means:
+```bash
+nx run users-service:publish-contract
+```
 
-- local development consumes `file:sdk/users-sdk`
-- local development consumes `file:sdk/payments-sdk`
-
-But the SDK package version is still meaningful, because it represents the version that would be published and adopted by downstream consumers.
-
-## Publish Behavior
-
-The GitHub SDK workflows now preserve the contract-driven SDK package version.
-
-They no longer replace it with synthetic demo-only versions before publish.
-
-That keeps the story coherent:
-
-- contract changes create a new SDK version
-- publish uses that version
-- consumers adopt that version
-
-## How To Try It
-
-Example with `users-service`:
-
-1. Change the API contract in `apps/users-service`.
-2. Bump the version in `apps/users-service/src/contract.ts`.
-3. Regenerate the SDK:
+To see the SDK side:
 
 ```bash
 nx run users-sdk:generate
+nx run users-sdk:build
 ```
 
-4. Inspect:
+To see consumer adoption:
 
-- `docs/swagger/users-service.json`
-- `sdk/users-sdk/swagger-spec.json`
-- `sdk/users-sdk/package.json`
-
-You should see the same version flow through those artifacts.
-
-## Adoption Story
-
-In a downstream consumer that installs from a registry, adoption would look like a normal package upgrade:
-
-```json
-{
-  "dependencies": {
-    "@genxapi/ecosystem-users-sdk": "^0.2.0"
-  }
-}
+```bash
+nx build web-app
 ```
 
-If the backend contract evolves and the generated SDK becomes `0.3.0`, the consumer can choose when to adopt that newer SDK version.
-
-That is the core point being demonstrated here: `genxapi` turns backend contract evolution into explicit client package evolution.
+The consumer build depends on the built SDK package being present, but it does not trigger SDK generation automatically.

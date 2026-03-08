@@ -7,16 +7,6 @@
   "targets": {
     "serve": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "projects": ["users-sdk"],
-          "target": "generate"
-        },
-        {
-          "projects": ["payments-sdk"],
-          "target": "generate"
-        }
-      ],
       "options": {
         "command": "vite --host",
         "cwd": "apps/web-app"
@@ -24,16 +14,6 @@
     },
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "projects": ["users-sdk"],
-          "target": "generate"
-        },
-        {
-          "projects": ["payments-sdk"],
-          "target": "generate"
-        }
-      ],
       "options": {
         "command": "vite build",
         "cwd": "apps/web-app"

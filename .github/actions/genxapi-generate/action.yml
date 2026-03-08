@@ -1,16 +1,12 @@
 name: GenXAPI Generate
 description: Generate SDKs with GenXAPI
 inputs:
-  service:
-    description: Service key used to map the generated SDK package
-    required: true
   config:
     description: Path to the GenXAPI config file
     required: true
-  useLocalSdk:
-    description: Use local SDK packages when registry versions are not available
-    required: false
-    default: "false"
+  sdkDirectory:
+    description: SDK directory to normalize after generation
+    required: true
   logLevel:
     description: GenXAPI log level
     required: false
@@ -18,24 +14,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Prepare local SDK overrides
-      if: ${{ inputs.useLocalSdk == 'true' }}
-      run: node tools/ci/use-local-sdk.mjs
-      shell: bash
-    - name: Install dependencies (registry)
-      if: ${{ inputs.useLocalSdk != 'true' }}
+    - name: Install dependencies
       run: npm ci
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-    - name: Install dependencies (local SDK)
-      if: ${{ inputs.useLocalSdk == 'true' }}
-      run: npm install --no-audit --no-fund --no-package-lock
-      shell: bash
-      env:
-        NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
     - name: Generate SDK
-      run: node tools/sdk/generate-sdk.mjs ${{ inputs.service }} ${{ inputs.config }} ${{ inputs.logLevel }}
+      run: npx genxapi generate --config ${{ inputs.config }} --log-level ${{ inputs.logLevel }}
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+    - name: Normalize generated SDK
+      run: node tools/sdk/normalize-generated-sdk.mjs ${{ inputs.sdkDirectory }}
+      shell: bash

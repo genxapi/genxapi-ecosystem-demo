@@ -76,7 +76,7 @@
   "info": {
     "title": "Users Service",
     "description": "Users service API for the genxapi ecosystem demo",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "contact": {}
   },
   "tags": [],
@@ -87,14 +87,20 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "ok",
+            "type": "string",
             "example": "ok",
-            "description": "Service status"
+            "description": "Service status",
+            "enum": [
+              "ok"
+            ]
           },
           "service": {
-            "type": "object",
-            "example": "user-service",
-            "description": "service name"
+            "type": "string",
+            "example": "users-service",
+            "description": "Service name",
+            "enum": [
+              "users-service"
+            ]
           }
         },
         "required": [

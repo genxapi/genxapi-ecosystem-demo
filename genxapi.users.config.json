@@ -23,16 +23,11 @@
   "clients": [
     {
       "name": "users",
-      "swagger": "./docs/swagger/users-service.json",
+      "swagger": "./docs/contracts/users-service/latest.json",
       "copySwagger": false,
       "config": {
         "baseUrl": "http://localhost:3001"
       }
     }
-  ],
-  "hooks": {
-    "beforeGenerate": [
-      "npm --prefix ../.. run swagger:export:users"
-    ]
-  }
+  ]
 }

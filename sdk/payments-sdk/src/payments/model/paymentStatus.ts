@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Payments Service
  * Payments service API for the genxapi ecosystem demo
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
 export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];

@@ -17,13 +17,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": ["node"],
-    "paths": {
-      "@genxapi/ecosystem-users-sdk": ["sdk/users-sdk/src/index.ts"],
-      "@genxapi/ecosystem-users-sdk/*": ["sdk/users-sdk/src/*"],
-      "genxapi-ecosystem-payments-sdk": ["sdk/payments-sdk/src/index.ts"],
-      "genxapi-ecosystem-payments-sdk/*": ["sdk/payments-sdk/src/*"]
-    }
+    "types": ["node"]
   },
   "exclude": ["node_modules", "tmp"]
 }

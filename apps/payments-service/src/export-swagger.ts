@@ -2,21 +2,15 @@ import 'reflect-metadata';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { PAYMENTS_SERVICE_CONTRACT } from './contract';
+import { buildPaymentsServiceSwaggerConfig } from './swagger';
 
 async function exportSwagger(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { logger: false });
 
   try {
-    const config = new DocumentBuilder()
-      .setTitle(PAYMENTS_SERVICE_CONTRACT.title)
-      .setDescription(PAYMENTS_SERVICE_CONTRACT.description)
-      .setVersion(process.env.API_VERSION ?? PAYMENTS_SERVICE_CONTRACT.version)
-      .build();
-
-    const document = SwaggerModule.createDocument(app, config);
+    const document = SwaggerModule.createDocument(app, buildPaymentsServiceSwaggerConfig());
     const repoRoot = path.resolve(__dirname, '..', '..', '..');
     const outputPath = path.join(repoRoot, 'docs', 'swagger', 'payments-service.json');
 
