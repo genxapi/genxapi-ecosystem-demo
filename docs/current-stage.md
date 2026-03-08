@@ -46,6 +46,8 @@ Each service has a `publish-contract` target that turns exported Swagger into pu
 
 These files represent the demo contract registry.
 
+In the intended lifecycle, `publish-contract` belongs in the backend service release pipeline. Running it manually in this repository is only a local stand-in for that release step.
+
 ### GenX API starts after publication
 
 The GenX API configs now consume only published contracts.
@@ -58,6 +60,10 @@ They do not:
 
 SDK generation can therefore run with the services offline, as long as the published contract snapshots already exist.
 
+For local development, the workspace configs point to `latest.json`.
+
+For CI and publishing, the workflow first resolves `latest.json` to the matching immutable `docs/contracts/<service>/<version>.json` file and generates from that pinned snapshot.
+
 ### SDK release is separate from service release
 
 The SDK package version is no longer forced to match the backend service or OpenAPI contract version.
@@ -65,6 +71,8 @@ The SDK package version is no longer forced to match the backend service or Open
 The backend service version still aligns with the OpenAPI contract version.
 
 The SDK package version is now an SDK release concern handled independently in the SDK workflow.
+
+That workflow does not change the backend service version or the published contract version.
 
 ### Consumer adoption is explicit
 
@@ -107,3 +115,18 @@ The important message is:
 - published contracts become stable inputs
 - GenX API can generate SDKs from those stable inputs
 - SDK release and consumer adoption remain normal downstream lifecycle concerns
+
+## Temporary Technical Debt
+
+`tools/sdk/normalize-generated-sdk.mjs` is a temporary patch for a template-level build mismatch.
+
+It is intentionally limited to the generated SDK build files and exists only so the generated packages can emit a correct `dist/index.js` and `dist/index.d.ts` pair until the upstream template is fixed.
+
+## Future Nx Release Direction
+
+If this repo adopts Nx Release later, the safe migration path is:
+
+- one release group for backend services
+- one release group for SDK packages
+
+That keeps service version -> contract version aligned while leaving SDK package versioning independent.
