@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { USER_ROLES, type UserRole } from '../auth/auth.types';
 
 export class User {
   @ApiProperty({
@@ -26,11 +27,11 @@ export class User {
   email!: string;
 
   @ApiProperty({
-    example: 'admin',
-    enum: ['admin', 'manager', 'user'],
-    description: 'Role of the user',
+    example: 'customer',
+    enum: USER_ROLES,
+    description: 'Role of the user for authorization decisions',
   })
-  role!: string;
+  role!: UserRole;
 
   @ApiProperty({
     example: true,
@@ -44,5 +45,5 @@ export class User {
     type: String,
     format: 'date-time',
   })
-  createdAt!: Date;
+  createdAt!: string;
 }

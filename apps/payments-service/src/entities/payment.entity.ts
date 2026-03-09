@@ -48,7 +48,7 @@ export class Payment {
     example: '2025-02-01T10:15:00Z',
     format: 'date-time',
   })
-  createdAt!: Date;
+  createdAt!: string;
 
   // Optional: relation example
   /*@ApiProperty({

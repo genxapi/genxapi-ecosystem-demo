@@ -1,27 +1,54 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiOkResponse } from '@nestjs/swagger';
-// import { AppService } from '../app.service';
+import { Controller, Get, Param, ParseIntPipe, Req, UseGuards } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { INTERNAL_ROLES, USER_ROLES, type AuthenticatedRequest } from '../auth/auth.types';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 import { User } from '../entities/user.entity';
+import { UsersService } from '../services/users.service';
 
-import db from '../users.json';
-
-@Controller('users')
+@ApiTags('Users')
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Missing or invalid bearer token.' })
+@ApiForbiddenResponse({ description: 'Authenticated user does not have access to this route.' })
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Controller()
 export class UsersController {
-  constructor(/*private readonly appService: AppService*/) { }
+  constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'Return a list of all users' })
-  @ApiOkResponse({ type: User, isArray: true })
-  getUsers() {
-    return db;
+  @Get('me')
+  @Roles(...USER_ROLES)
+  @ApiOperation({ summary: 'Return the authenticated user profile' })
+  @ApiOkResponse({ type: User })
+  @ApiNotFoundResponse({ description: 'Authenticated user was not found.' })
+  getMe(@Req() request: AuthenticatedRequest) {
+    return this.usersService.getUserById(Number(request.user.sub));
   }
 
-  @Get(':id')
-  @ApiParam({ name: 'id', type: Number, description: 'User ID to retrieve', example: 1 })
-  @ApiOperation({ summary: 'Return details of a specific user' })
+  @Get('users')
+  @Roles(...INTERNAL_ROLES)
+  @ApiOperation({ summary: 'Return a list of users for internal support and admin tooling' })
+  @ApiOkResponse({ type: User, isArray: true })
+  getUsers() {
+    return this.usersService.getUsers();
+  }
+
+  @Get('users/:userId')
+  @Roles(...INTERNAL_ROLES)
+  @ApiParam({ name: 'userId', type: Number, description: 'User ID to retrieve', example: 1 })
+  @ApiOperation({ summary: 'Return details of a specific user for internal support and admin tooling' })
   @ApiOkResponse({ type: User })
-  getUser(@Param('id') userId: string) {
-    const user = db.find(({ id }) => id === Number(userId));
-    return user ?? null;
+  @ApiNotFoundResponse({ description: 'User was not found.' })
+  getUser(@Param('userId', ParseIntPipe) userId: number) {
+    return this.usersService.getUserById(userId);
   }
 }
