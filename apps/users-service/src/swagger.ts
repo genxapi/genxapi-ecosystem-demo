@@ -40,4 +40,11 @@ export const buildUsersServiceSwaggerConfig = () =>
     .setTitle(SWAGGER_TITLE)
     .setDescription(SWAGGER_DESCRIPTION)
     .setVersion(resolveServicePackageVersion())
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      description:
+        'Demo HS256 bearer token. Required claims: sub (user id), role, email, name, iss, aud.',
+    })
     .build();

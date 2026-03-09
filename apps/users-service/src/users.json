@@ -13,7 +13,7 @@
     "firstName": "Bob",
     "lastName": "Smith",
     "email": "bob.smith@example.com",
-    "role": "user",
+    "role": "customer",
     "isActive": true,
     "createdAt": "2025-01-12T14:30:00Z"
   },
@@ -22,7 +22,7 @@
     "firstName": "Charlie",
     "lastName": "Brown",
     "email": "charlie.brown@example.com",
-    "role": "user",
+    "role": "customer",
     "isActive": false,
     "createdAt": "2025-01-15T08:45:00Z"
   },
@@ -31,7 +31,7 @@
     "firstName": "Diana",
     "lastName": "Miller",
     "email": "diana.miller@example.com",
-    "role": "manager",
+    "role": "support",
     "isActive": true,
     "createdAt": "2025-01-18T11:20:00Z"
   },
@@ -40,7 +40,7 @@
     "firstName": "Ethan",
     "lastName": "Williams",
     "email": "ethan.williams@example.com",
-    "role": "user",
+    "role": "customer",
     "isActive": true,
     "createdAt": "2025-01-20T16:05:00Z"
   }
