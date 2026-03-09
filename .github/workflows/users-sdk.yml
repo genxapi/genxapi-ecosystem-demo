@@ -24,6 +24,11 @@ on:
         required: false
         default: false
         type: boolean
+      contractVersion:
+        description: Published users-service contract version to pin this workflow to
+        required: false
+        default: ""
+        type: string
       releaseType:
         description: Version bump to apply before publishing
         required: false
@@ -45,10 +50,16 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      - name: Resolve published users contract
+        id: contract
+        env:
+          CONTRACT_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.contractVersion || '' }}
+        run: node tools/contracts/resolve-contract-path.mjs users-service "$CONTRACT_VERSION" >> "$GITHUB_OUTPUT"
       - name: Generate SDK
         uses: ./.github/actions/genxapi-generate
         with:
           config: genxapi.users.config.json
+          contractPath: ${{ steps.contract.outputs.contract_path }}
           sdkDirectory: sdk/users-sdk
       - name: Build SDK package
         working-directory: sdk/users-sdk
@@ -72,6 +83,11 @@ jobs:
           node-version: 20
           cache: npm
           registry-url: https://registry.npmjs.org
+      - name: Resolve published users contract
+        id: contract
+        env:
+          CONTRACT_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.contractVersion || '' }}
+        run: node tools/contracts/resolve-contract-path.mjs users-service "$CONTRACT_VERSION" >> "$GITHUB_OUTPUT"
       - name: Verify npm token
         shell: bash
         env:
@@ -85,6 +101,7 @@ jobs:
         uses: ./.github/actions/genxapi-generate
         with:
           config: genxapi.users.config.json
+          contractPath: ${{ steps.contract.outputs.contract_path }}
           sdkDirectory: sdk/users-sdk
       - name: Build SDK package
         working-directory: sdk/users-sdk

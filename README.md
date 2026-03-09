@@ -60,10 +60,14 @@ Published contracts are created with dedicated service-owned targets:
 - `nx run users-service:publish-contract`
 - `nx run payments-service:publish-contract`
 
+These targets model a backend release concern. In a real service pipeline, they should run as part of the service release workflow after the service version has been resolved, not as part of SDK generation.
+
 Those targets publish into:
 
 - `docs/contracts/<service>/<version>.json`
 - `docs/contracts/<service>/latest.json`
+
+`latest.json` is only a convenience alias for local development. The documented CI path resolves that alias to `docs/contracts/<service>/<version>.json` and generates the SDK from the pinned versioned snapshot.
 
 ## Where GenX API Adds Value
 
@@ -74,7 +78,7 @@ It starts from the published contract snapshot:
 - `genxapi.users.config.json` reads `docs/contracts/users-service/latest.json`
 - `genxapi.config.json` reads `docs/contracts/payments-service/latest.json`
 
-That keeps contract production and SDK generation clearly separated.
+That keeps contract production and SDK generation clearly separated locally, while CI pins generation to an immutable versioned contract file for reproducibility.
 
 ## Local Demo Flow
 
@@ -90,6 +94,8 @@ Publish the current service contracts:
 nx run users-service:publish-contract
 nx run payments-service:publish-contract
 ```
+
+For the demo, those commands simulate the service release pipeline. They are not meant to imply that consumer apps or GenX API own contract publication.
 
 Generate and build the SDK packages:
 
@@ -133,6 +139,8 @@ nx run users-sdk:generate
 nx run payments-sdk:generate
 ```
 
+Those local generate targets use `latest.json` for convenience. The GitHub SDK workflows first resolve `latest.json` to a pinned `docs/contracts/<service>/<version>.json` snapshot and then generate from that immutable contract.
+
 Build the SDK packages:
 
 ```bash
@@ -167,6 +175,20 @@ Not yet integrated:
 - `backoffice-app` consuming SDK packages
 - `mobile-app` consuming SDK packages
 - a backend release automation tool such as semantic-release or Nx Release
+
+If this repository migrates to Nx Release later, keep services and SDK packages in separate release groups so backend service versioning and SDK package versioning remain independent.
+
+## Temporary Template Workaround
+
+`tools/sdk/normalize-generated-sdk.mjs` exists only to patch a current GenX API template build mismatch between generated declaration output and the Rollup DTS input path.
+
+Its scope is intentionally narrow:
+
+- enable declarations in `tsconfig.build.json`
+- point declaration output to `dist/types`
+- correct the Rollup DTS input path
+
+It does not own contract publication, versioning, or SDK release decisions. Remove it once the upstream template emits a build-ready SDK package by default.
 
 ## More Detail
 

@@ -1,11 +1,14 @@
 name: GenXAPI Generate
-description: Generate SDKs with GenXAPI
+description: Generate SDKs from published contracts with GenXAPI
 inputs:
   config:
     description: Path to the GenXAPI config file
     required: true
+  contractPath:
+    description: Optional pinned published contract snapshot to consume in CI
+    required: false
   sdkDirectory:
-    description: SDK directory to normalize after generation
+    description: SDK directory to patch after generation for the current template build gap
     required: true
   logLevel:
     description: GenXAPI log level
@@ -20,10 +23,14 @@ runs:
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
     - name: Generate SDK
-      run: npx genxapi generate --config ${{ inputs.config }} --log-level ${{ inputs.logLevel }}
+      run: >-
+        node tools/sdk/run-genxapi-generate.mjs
+        --config ${{ inputs.config }}
+        --contract ${{ inputs.contractPath }}
+        --log-level ${{ inputs.logLevel }}
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-    - name: Normalize generated SDK
+    - name: Patch temporary template build gap
       run: node tools/sdk/normalize-generated-sdk.mjs ${{ inputs.sdkDirectory }}
       shell: bash

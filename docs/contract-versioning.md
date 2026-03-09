@@ -31,6 +31,8 @@ Example:
 - published contract: `docs/contracts/users-service/0.2.0.json`
 - `docs/contracts/users-service/latest.json` also reports `info.version = 0.2.0`
 
+`latest.json` is an alias for convenience. The reproducible CI path should resolve it to the immutable versioned snapshot and generate from `docs/contracts/users-service/0.2.0.json`.
+
 ## Contract Version != SDK Package Version
 
 The SDK package version is intentionally not synced to the contract version.
@@ -54,6 +56,8 @@ This boundary keeps responsibilities realistic:
 - SDK teams can version and publish clients independently
 - consumer applications can choose when to upgrade SDK dependencies
 
+`publish-contract` should therefore be wired into backend release automation, not into GenX API generation or consumer build steps.
+
 ## Local Demo Flow
 
 To see the contract side:
@@ -61,6 +65,8 @@ To see the contract side:
 ```bash
 nx run users-service:publish-contract
 ```
+
+In the demo, this command stands in for a backend release pipeline step.
 
 To see the SDK side:
 
