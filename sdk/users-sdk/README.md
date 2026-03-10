@@ -6,7 +6,7 @@ This package contains generated API clients produced by `@genxapi/cli` using the
 
 | Client | OpenAPI Source | Base URL | Description |
 | ------ | -------------- | -------- | ----------- |
-| users | [Users Service](./docs/contracts/users-service/latest.json) | http://localhost:3001 | Users service API for the genxapi ecosystem demo |
+| users | [Users Service](./docs/contracts/users-service/latest.json) |  | Users service API for the genxapi ecosystem demo. Protected routes use a demo HS256 bearer JWT. customer can read only /me. support and admin can read the internal /users routes. |
 
 ## Usage
 

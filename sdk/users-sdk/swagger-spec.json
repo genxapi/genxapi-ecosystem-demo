@@ -20,14 +20,49 @@
         }
       }
     },
-    "/users": {
+    "/me": {
       "get": {
-        "operationId": "UsersController_getUsers",
-        "summary": "Return a list of all users",
+        "operationId": "UsersController_getMe",
+        "summary": "Return the authenticated user profile",
+        "description": "Customer self-service route. The target user is always resolved from the JWT sub claim.",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Authenticated user profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "404": {
+            "description": "Authenticated user was not found."
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_getUsers",
+        "summary": "Return the internal users list",
+        "description": "Read-only internal route for support and admin personas.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Internal user directory.",
             "content": {
               "application/json": {
                 "schema": {
@@ -38,17 +73,32 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Requires support or admin role."
           }
-        }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
-    "/users/{id}": {
+    "/users/{userId}": {
       "get": {
         "operationId": "UsersController_getUser",
-        "summary": "Return details of a specific user",
+        "summary": "Return an internal user by userId",
+        "description": "Read-only internal route for support and admin personas. Customer self-access is intentionally exposed only through /me.",
         "parameters": [
           {
-            "name": "id",
+            "name": "userId",
             "required": true,
             "in": "path",
             "description": "User ID to retrieve",
@@ -60,7 +110,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Requested user profile.",
             "content": {
               "application/json": {
                 "schema": {
@@ -68,20 +118,45 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Requires support or admin role."
+          },
+          "404": {
+            "description": "User was not found."
           }
-        }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     }
   },
   "info": {
     "title": "Users Service",
-    "description": "Users service API for the genxapi ecosystem demo",
-    "version": "0.2.0",
+    "description": "Users service API for the genxapi ecosystem demo. Protected routes use a demo HS256 bearer JWT. customer can read only /me. support and admin can read the internal /users routes.",
+    "version": "0.4.0",
     "contact": {}
   },
   "tags": [],
   "servers": [],
   "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Demo HS256 bearer token. Required claims: sub (numeric user id), role (customer|support|admin), email, name, iss, aud."
+      }
+    },
     "schemas": {
       "HealthCheckResponse": {
         "type": "object",
@@ -133,13 +208,13 @@
           },
           "role": {
             "type": "string",
-            "example": "admin",
+            "example": "customer",
             "enum": [
-              "admin",
-              "manager",
-              "user"
+              "customer",
+              "support",
+              "admin"
             ],
-            "description": "Role of the user"
+            "description": "Role of the user for authorization decisions"
           },
           "isActive": {
             "type": "boolean",

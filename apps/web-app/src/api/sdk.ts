@@ -1,61 +1,35 @@
-import { users } from '@genxapi/ecosystem-users-sdk';
-import { payments } from 'genxapi-ecosystem-payments-sdk';
+import { createUsersSdk, users } from '@genxapi/ecosystem-users-sdk';
+import { createPaymentsSdk, payments } from 'genxapi-ecosystem-payments-sdk';
 
-type ApiResponse<T> = {
-  data: T;
-  status: number;
-  headers: Headers;
-};
+const withSignal = (signal?: AbortSignal): RequestInit | undefined => (signal ? { signal } : undefined);
 
-const extractErrorMessage = (data: unknown): string | null => {
-  if (!data) {
-    return null;
-  }
+const browserTokenProvider = () =>
+  window.localStorage.getItem('genxapi.demo.bearerToken') ?? import.meta.env.VITE_DEMO_BEARER_TOKEN ?? null;
 
-  if (typeof data === 'string') {
-    return data;
-  }
+const usersSdk = createUsersSdk({
+  baseUrl: import.meta.env.VITE_USERS_SERVICE_BASE_URL ?? '/api/users-service',
+  accessToken: browserTokenProvider,
+});
 
-  if (typeof data === 'object') {
-    const record = data as { message?: string; error?: string };
-    return record.message ?? record.error ?? null;
-  }
-
-  return null;
-};
-
-const unwrap = <T>(res: ApiResponse<T>): T => {
-  if (res.status >= 400) {
-    const detail = extractErrorMessage(res.data);
-    const suffix = detail ? `: ${detail}` : '';
-    throw new Error(`Request failed with status ${res.status}${suffix}`);
-  }
-
-  return res.data;
-};
-
-const withSignal = (signal?: AbortSignal): RequestInit | undefined =>
-  signal ? { signal } : undefined;
+const paymentsSdk = createPaymentsSdk({
+  baseUrl: import.meta.env.VITE_PAYMENTS_SERVICE_BASE_URL ?? '/api/payments-service',
+  accessToken: browserTokenProvider,
+});
 
 export type User = users.User;
 export type Payment = payments.Payment;
 export type UsersHealth = users.HealthCheckResponse;
 export type PaymentsHealth = payments.HealthCheckResponse;
 
-export const getUsers = async (signal?: AbortSignal) =>
-  unwrap(await users.usersControllerGetUsers(withSignal(signal)));
+export const getUsers = (signal?: AbortSignal) => usersSdk.getUsers(withSignal(signal));
 
-export const getUser = async (id: number, signal?: AbortSignal) =>
-  unwrap(await users.usersControllerGetUser(id, withSignal(signal)));
+export const getUser = (id: number, signal?: AbortSignal) => usersSdk.getUser(id, withSignal(signal));
 
-export const getUsersHealth = async (signal?: AbortSignal) =>
-  unwrap(await users.healthControllerGetHealth(withSignal(signal)));
+export const getUsersHealth = (signal?: AbortSignal) => usersSdk.getHealth(withSignal(signal));
 
-export const getPaymentsHealth = async (signal?: AbortSignal) =>
-  unwrap(await payments.healthControllerGetHealth(withSignal(signal)));
+export const getPaymentsHealth = (signal?: AbortSignal) => paymentsSdk.getHealth(withSignal(signal));
 
-export const getPayments = async (signal?: AbortSignal) =>
-  unwrap(await payments.paymentsControllerGetPayments(withSignal(signal)));
+export const getPayments = (signal?: AbortSignal) => paymentsSdk.getPayments(withSignal(signal));
 
-export const getUserPayments = async (userId: number, signal?: AbortSignal) =>
-  unwrap(await payments.paymentsControllerGetUserPayments(userId, withSignal(signal)));
+export const getUserPayments = (userId: number, signal?: AbortSignal) =>
+  paymentsSdk.getUserPayments(userId, withSignal(signal));

@@ -6,7 +6,7 @@ This package contains generated API clients produced by `@genxapi/cli` using the
 
 | Client | OpenAPI Source | Base URL | Description |
 | ------ | -------------- | -------- | ----------- |
-| payments | [Payments Service](./docs/contracts/payments-service/latest.json) | http://localhost:3002 | Payments service API for the genxapi ecosystem demo |
+| payments | [Payments Service](./docs/contracts/payments-service/latest.json) |  | Payments service API for the genxapi ecosystem demo. Protected routes use a demo HS256 bearer JWT. customer can read only /me/payments. support and admin can read internal /payments routes and user payment lookups. |
 
 ## Usage
 

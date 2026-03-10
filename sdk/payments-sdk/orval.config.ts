@@ -12,10 +12,16 @@ export default defineConfig({
       "mode": "split",
       "client": "fetch",
       "httpClient": "fetch",
-      "baseUrl": "http://localhost:3002",
+      "baseUrl": "",
       "mock": false,
       "prettier": true,
-      "clean": true
+      "clean": true,
+      "override": {
+        "mutator": {
+          "path": "../runtime.ts",
+          "name": "sdkFetch"
+        }
+      }
     }
   }
 });
