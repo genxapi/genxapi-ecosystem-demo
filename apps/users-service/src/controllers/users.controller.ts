@@ -19,7 +19,6 @@ import { UsersService } from '../services/users.service';
 @ApiTags('Users')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Missing or invalid bearer token.' })
-@ApiForbiddenResponse({ description: 'Authenticated user does not have access to this route.' })
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller()
 export class UsersController {
@@ -27,8 +26,12 @@ export class UsersController {
 
   @Get('me')
   @Roles(...USER_ROLES)
-  @ApiOperation({ summary: 'Return the authenticated user profile' })
-  @ApiOkResponse({ type: User })
+  @ApiOperation({
+    summary: 'Return the authenticated user profile',
+    description:
+      'Customer self-service route. The target user is always resolved from the JWT sub claim.',
+  })
+  @ApiOkResponse({ type: User, description: 'Authenticated user profile.' })
   @ApiNotFoundResponse({ description: 'Authenticated user was not found.' })
   getMe(@Req() request: AuthenticatedRequest) {
     return this.usersService.getUserById(Number(request.user.sub));
@@ -36,8 +39,12 @@ export class UsersController {
 
   @Get('users')
   @Roles(...INTERNAL_ROLES)
-  @ApiOperation({ summary: 'Return a list of users for internal support and admin tooling' })
-  @ApiOkResponse({ type: User, isArray: true })
+  @ApiOperation({
+    summary: 'Return the internal users list',
+    description: 'Read-only internal route for support and admin personas.',
+  })
+  @ApiOkResponse({ type: User, isArray: true, description: 'Internal user directory.' })
+  @ApiForbiddenResponse({ description: 'Requires support or admin role.' })
   getUsers() {
     return this.usersService.getUsers();
   }
@@ -45,8 +52,13 @@ export class UsersController {
   @Get('users/:userId')
   @Roles(...INTERNAL_ROLES)
   @ApiParam({ name: 'userId', type: Number, description: 'User ID to retrieve', example: 1 })
-  @ApiOperation({ summary: 'Return details of a specific user for internal support and admin tooling' })
-  @ApiOkResponse({ type: User })
+  @ApiOperation({
+    summary: 'Return an internal user by userId',
+    description:
+      'Read-only internal route for support and admin personas. Customer self-access is intentionally exposed only through /me.',
+  })
+  @ApiOkResponse({ type: User, description: 'Requested user profile.' })
+  @ApiForbiddenResponse({ description: 'Requires support or admin role.' })
   @ApiNotFoundResponse({ description: 'User was not found.' })
   getUser(@Param('userId', ParseIntPipe) userId: number) {
     return this.usersService.getUserById(userId);

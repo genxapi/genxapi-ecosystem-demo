@@ -19,7 +19,6 @@ import { PaymentsService } from '../services/payments.service';
 @ApiTags('Payments')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Missing or invalid bearer token.' })
-@ApiForbiddenResponse({ description: 'Authenticated user does not have access to this route.' })
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller()
 export class PaymentsController {
@@ -27,16 +26,24 @@ export class PaymentsController {
 
   @Get('me/payments')
   @Roles(...USER_ROLES)
-  @ApiOperation({ summary: 'Return the authenticated user payments' })
-  @ApiOkResponse({ type: Payment, isArray: true })
+  @ApiOperation({
+    summary: 'Return the authenticated user payments',
+    description:
+      'Customer self-service route. The service resolves ownership from the JWT sub claim instead of trusting caller-supplied user ids.',
+  })
+  @ApiOkResponse({ type: Payment, isArray: true, description: 'Payments owned by the authenticated subject.' })
   getMyPayments(@Req() request: AuthenticatedRequest) {
     return this.paymentsService.getPaymentsByUserId(Number(request.user.sub));
   }
 
   @Get('payments')
   @Roles(...INTERNAL_ROLES)
-  @ApiOperation({ summary: 'Return a list of payments for internal support and admin tooling' })
-  @ApiOkResponse({ type: Payment, isArray: true })
+  @ApiOperation({
+    summary: 'Return the internal payments list',
+    description: 'Read-only internal route for support and admin personas.',
+  })
+  @ApiOkResponse({ type: Payment, isArray: true, description: 'Internal payments list.' })
+  @ApiForbiddenResponse({ description: 'Requires support or admin role.' })
   getPayments() {
     return this.paymentsService.getPayments();
   }
@@ -49,8 +56,13 @@ export class PaymentsController {
     description: 'Payment ID to retrieve',
     example: 1001,
   })
-  @ApiOperation({ summary: 'Return details of a specific payment for internal support and admin tooling' })
-  @ApiOkResponse({ type: Payment })
+  @ApiOperation({
+    summary: 'Return an internal payment by paymentId',
+    description:
+      'Read-only internal route for support and admin personas. The route identifies a payment resource by paymentId; it is not a user-payment shortcut.',
+  })
+  @ApiOkResponse({ type: Payment, description: 'Requested payment resource.' })
+  @ApiForbiddenResponse({ description: 'Requires support or admin role.' })
   @ApiNotFoundResponse({ description: 'Payment was not found.' })
   getPayment(@Param('paymentId', ParseIntPipe) paymentId: number) {
     return this.paymentsService.getPaymentById(paymentId);
@@ -59,8 +71,17 @@ export class PaymentsController {
   @Get('users/:userId/payments')
   @Roles(...INTERNAL_ROLES)
   @ApiParam({ name: 'userId', type: Number, description: 'User ID to filter payments by', example: 1 })
-  @ApiOperation({ summary: 'Return payments for a specific user for internal support and admin tooling' })
-  @ApiOkResponse({ type: Payment, isArray: true })
+  @ApiOperation({
+    summary: 'Return internal payments for a specific userId',
+    description:
+      'Read-only internal convenience route for support and admin personas. It filters payment resources by owning userId.',
+  })
+  @ApiOkResponse({
+    type: Payment,
+    isArray: true,
+    description: 'Payments owned by the requested userId. Returns an empty array when that user has no payments.',
+  })
+  @ApiForbiddenResponse({ description: 'Requires support or admin role.' })
   getUserPayments(@Param('userId', ParseIntPipe) userId: number) {
     return this.paymentsService.getPaymentsByUserId(userId);
   }
