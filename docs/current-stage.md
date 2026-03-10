@@ -116,11 +116,15 @@ The important message is:
 - GenX API can generate SDKs from those stable inputs
 - SDK release and consumer adoption remain normal downstream lifecycle concerns
 
-## Temporary Technical Debt
+## Runtime Convention
 
-`tools/sdk/normalize-generated-sdk.mjs` is a temporary patch for a template-level build mismatch.
+The consumer-side runtime contract is now explicit:
 
-It is intentionally limited to the generated SDK build files and exists only so the generated packages can emit a correct `dist/index.js` and `dist/index.d.ts` pair until the upstream template is fixed.
+- consumers resolve service base URLs at runtime
+- consumers provide the bearer token source
+- SDK packages expose small factories that bind those values once
+
+`packages/demo-runtime` keeps the demo personas and shared runtime config shape aligned across the consumer stubs without moving auth UX into the generated SDKs.
 
 ## Future Nx Release Direction
 

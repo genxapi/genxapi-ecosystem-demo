@@ -9,7 +9,7 @@ This repository demonstrates the intended GenX API adoption model inside an Nx m
 5. GenX API generates an SDK package
 6. consumer apps adopt the SDK package explicitly
 
-At the current stage, `web-app` is the only consumer integrated with the generated SDK packages.
+At the current stage, `web-app` is the only consumer making live SDK calls. `backoffice-app` and `mobile-app` now share the same runtime config contract but still stop short of full UI flows.
 
 ## Ownership Boundary
 
@@ -42,8 +42,14 @@ GenX API starts only after the contract has already been published.
   - generated from the published users-service contract
 - `sdk/payments-sdk`
   - generated from the published payments-service contract
+- `packages/demo-runtime`
+  - shared demo personas and consumer runtime config helpers
 - `apps/web-app`
   - consumer app that imports SDK packages through normal package boundaries
+- `apps/backoffice-app`
+  - internal consumer stub using the shared runtime config contract
+- `apps/mobile-app`
+  - mobile consumer stub using the shared runtime config contract
 
 ## Backend Contract Lifecycle
 
@@ -169,26 +175,26 @@ Integrated now:
 - GenX API generation from published contracts
 - independently releasable SDK packages
 - explicit package consumption in `web-app`
+- one shared runtime config shape for `web-app`, `mobile-app`, and `backoffice-app`
+- demo persona selection and token storage in `web-app`
 
 Not yet integrated:
 
-- `backoffice-app` consuming SDK packages
-- `mobile-app` consuming SDK packages
+- `backoffice-app` making live SDK requests
+- `mobile-app` making live SDK requests
 - a backend release automation tool such as semantic-release or Nx Release
 
 If this repository migrates to Nx Release later, keep services and SDK packages in separate release groups so backend service versioning and SDK package versioning remain independent.
 
-## Temporary Template Workaround
+## Runtime Adoption
 
-`tools/sdk/normalize-generated-sdk.mjs` exists only to patch a current GenX API template build mismatch between generated declaration output and the Rollup DTS input path.
+The repo now keeps one shared consumer-side convention for runtime wiring:
 
-Its scope is intentionally narrow:
+- consumers pick a base URL per service at runtime
+- consumers provide a bearer token provider
+- SDK packages bind that once through `createUsersSdk(...)` and `createPaymentsSdk(...)`
 
-- enable declarations in `tsconfig.build.json`
-- point declaration output to `dist/types`
-- correct the Rollup DTS input path
-
-It does not own contract publication, versioning, or SDK release decisions. Remove it once the upstream template emits a build-ready SDK package by default.
+`packages/demo-runtime` exists only to keep the demo personas and runtime config shape consistent across `web-app`, `mobile-app`, and `backoffice-app`.
 
 ## More Detail
 

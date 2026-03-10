@@ -1,20 +1,18 @@
+import { createDemoSdkRuntimeConfig } from '@genxapi/ecosystem-demo-runtime';
 import { createUsersSdk, users } from '@genxapi/ecosystem-users-sdk';
 import { createPaymentsSdk, payments } from 'genxapi-ecosystem-payments-sdk';
+import { getCurrentDemoAccessToken } from '../auth/demo-session';
 
 const withSignal = (signal?: AbortSignal): RequestInit | undefined => (signal ? { signal } : undefined);
 
-const browserTokenProvider = () =>
-  window.localStorage.getItem('genxapi.demo.bearerToken') ?? import.meta.env.VITE_DEMO_BEARER_TOKEN ?? null;
-
-const usersSdk = createUsersSdk({
-  baseUrl: import.meta.env.VITE_USERS_SERVICE_BASE_URL ?? '/api/users-service',
-  accessToken: browserTokenProvider,
+const sdkRuntime = createDemoSdkRuntimeConfig({
+  usersServiceBaseUrl: import.meta.env.VITE_USERS_SERVICE_BASE_URL ?? '/api/users-service',
+  paymentsServiceBaseUrl: import.meta.env.VITE_PAYMENTS_SERVICE_BASE_URL ?? '/api/payments-service',
+  accessToken: getCurrentDemoAccessToken,
 });
 
-const paymentsSdk = createPaymentsSdk({
-  baseUrl: import.meta.env.VITE_PAYMENTS_SERVICE_BASE_URL ?? '/api/payments-service',
-  accessToken: browserTokenProvider,
-});
+const usersSdk = createUsersSdk(sdkRuntime.users);
+const paymentsSdk = createPaymentsSdk(sdkRuntime.payments);
 
 export type User = users.User;
 export type Payment = payments.Payment;
