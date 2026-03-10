@@ -10,7 +10,7 @@
     "serve:web-app": "nx serve web-app",
     "serve:backoffice-app": "nx serve backoffice-app",
     "serve:mobile-app": "nx serve mobile-app",
-    "serve:demo": "nx run-many --target=serve --projects=auth-service,users-service,payments-service,web-app --parallel=4",
+    "serve:demo": "nx run-many --target=serve --projects=auth-service,users-service,payments-service,web-app,backoffice-app --parallel=5",
     "swagger:export:auth": "nx run auth-service:export-swagger",
     "swagger:export:payments": "nx run payments-service:export-swagger",
     "swagger:export:users": "nx run users-service:export-swagger",

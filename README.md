@@ -126,6 +126,7 @@ npm run serve:demo
 Open:
 
 - Web app: `http://localhost:4200`
+- Backoffice app: `http://localhost:4300`
 - Auth Swagger UI: `http://localhost:3003/swagger`
 - Users Swagger UI: `http://localhost:3001/swagger`
 - Payments Swagger UI: `http://localhost:3002/swagger`
@@ -141,6 +142,8 @@ Support and admin accounts still exist in `auth-service`, but they are intention
 
 - Support: `diana.miller@example.com` / `diana-demo-password`
 - Admin: `alice.johnson@example.com` / `alice-demo-password`
+
+Those internal personas now drive the operational workflows in `backoffice-app`.
 
 ## Useful Commands
 
@@ -176,10 +179,11 @@ nx run users-sdk:build
 nx run payments-sdk:build
 ```
 
-Build the consumer app:
+Build the consumer apps:
 
 ```bash
 nx build web-app
+nx build backoffice-app
 ```
 
 Inspect the project graph:
@@ -198,13 +202,14 @@ Integrated now:
 - GenX API generation from published contracts
 - independently releasable SDK packages
 - explicit package consumption in `web-app`
+- explicit package consumption in `backoffice-app`
 - app-owned session storage in `web-app`
+- app-owned session storage in `backoffice-app`
+- internal role-aware routing and navigation in `backoffice-app`
 - shared auth-service client helpers under `libs/auth-client`
 
 Not yet integrated:
 
-- `backoffice-app` login flow
-- `backoffice-app` making live SDK requests
 - `mobile-app` login flow
 - `mobile-app` making live SDK requests
 - a backend release automation tool such as semantic-release or Nx Release
