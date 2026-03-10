@@ -2,32 +2,36 @@ import { createUsersSdk, users } from '@genxapi/ecosystem-users-sdk';
 import { createPaymentsSdk, payments } from 'genxapi-ecosystem-payments-sdk';
 import { getCurrentAuthAccessToken } from '../auth/auth-session';
 
+type AccessTokenProvider =
+  | string
+  | null
+  | undefined
+  | (() => string | null | undefined | Promise<string | null | undefined>);
+
 const withSignal = (signal?: AbortSignal): RequestInit | undefined => (signal ? { signal } : undefined);
 
-const usersSdk = createUsersSdk({
-  baseUrl: import.meta.env.VITE_USERS_SERVICE_BASE_URL ?? '/api/users-service',
-  accessToken: getCurrentAuthAccessToken,
+export const webAppUsersServiceBaseUrl =
+  import.meta.env.VITE_USERS_SERVICE_BASE_URL ?? '/api/users-service';
+export const webAppPaymentsServiceBaseUrl =
+  import.meta.env.VITE_PAYMENTS_SERVICE_BASE_URL ?? '/api/payments-service';
+
+export const createWebAppSdks = (accessToken: AccessTokenProvider) => ({
+  users: createUsersSdk({
+    baseUrl: webAppUsersServiceBaseUrl,
+    accessToken,
+  }),
+  payments: createPaymentsSdk({
+    baseUrl: webAppPaymentsServiceBaseUrl,
+    accessToken,
+  }),
 });
 
-const paymentsSdk = createPaymentsSdk({
-  baseUrl: import.meta.env.VITE_PAYMENTS_SERVICE_BASE_URL ?? '/api/payments-service',
-  accessToken: getCurrentAuthAccessToken,
-});
+const webAppSdks = createWebAppSdks(getCurrentAuthAccessToken);
 
-export type User = users.User;
-export type Payment = payments.Payment;
-export type UsersHealth = users.HealthCheckResponse;
-export type PaymentsHealth = payments.HealthCheckResponse;
+export type CustomerProfile = users.User;
+export type CustomerPayment = payments.Payment;
 
-export const getUsers = (signal?: AbortSignal) => usersSdk.getUsers(withSignal(signal));
+export const getMyProfile = (signal?: AbortSignal) => webAppSdks.users.getMe(withSignal(signal));
 
-export const getUser = (id: number, signal?: AbortSignal) => usersSdk.getUser(id, withSignal(signal));
-
-export const getUsersHealth = (signal?: AbortSignal) => usersSdk.getHealth(withSignal(signal));
-
-export const getPaymentsHealth = (signal?: AbortSignal) => paymentsSdk.getHealth(withSignal(signal));
-
-export const getPayments = (signal?: AbortSignal) => paymentsSdk.getPayments(withSignal(signal));
-
-export const getUserPayments = (userId: number, signal?: AbortSignal) =>
-  paymentsSdk.getUserPayments(userId, withSignal(signal));
+export const getMyPayments = (signal?: AbortSignal) =>
+  webAppSdks.payments.getMyPayments(withSignal(signal));

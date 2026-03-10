@@ -33,3 +33,13 @@ export const getErrorMessage = (error: unknown): string => {
 
   return 'Something went wrong.';
 };
+
+export const formatLabel = (value?: string): string => {
+  if (!value) {
+    return '—';
+  }
+
+  return value
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+};

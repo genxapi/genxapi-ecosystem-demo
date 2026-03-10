@@ -132,9 +132,13 @@ Open:
 
 ## Demo Credentials
 
-Use the seeded auth-service accounts to log into `web-app`:
+`web-app` now boots customer sessions with one-click demo personas backed by seeded `auth-service` accounts:
 
 - Customer: `bob.smith@example.com` / `bob-demo-password`
+- Customer: `ethan.williams@example.com` / `ethan-demo-password`
+
+Support and admin accounts still exist in `auth-service`, but they are intentionally no longer part of the customer-facing `web-app` flow:
+
 - Support: `diana.miller@example.com` / `diana-demo-password`
 - Admin: `alice.johnson@example.com` / `alice-demo-password`
 
