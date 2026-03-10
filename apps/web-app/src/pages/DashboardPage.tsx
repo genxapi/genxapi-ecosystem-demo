@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { getAuthHealth, type AuthHealth } from '../api/auth';
 import {
   getPaymentsHealth,
   getUsersHealth,
@@ -8,7 +9,7 @@ import {
 } from '../api/sdk';
 import { formatDateTime, getErrorMessage } from '../utils/format';
 
-type HealthQuery = UseQueryResult<UsersHealth | PaymentsHealth, Error>;
+type HealthQuery = UseQueryResult<AuthHealth | UsersHealth | PaymentsHealth, Error>;
 
 const ServiceCard = ({ title, query }: { title: string; query: HealthQuery }) => {
   const status = query.isError ? 'down' : query.data?.status ?? 'unknown';
@@ -30,6 +31,11 @@ const ServiceCard = ({ title, query }: { title: string; query: HealthQuery }) =>
 };
 
 export default function DashboardPage() {
+  const authHealthQuery = useQuery({
+    queryKey: ['health', 'auth'],
+    queryFn: ({ signal }) => getAuthHealth(signal),
+  });
+
   const usersHealthQuery = useQuery({
     queryKey: ['health', 'users'],
     queryFn: ({ signal }) => getUsersHealth(signal),
@@ -44,9 +50,10 @@ export default function DashboardPage() {
     <div className="page">
       <div className="page-header">
         <h2>Service Health</h2>
-        <p className="muted">Live checks from both back-end services.</p>
+        <p className="muted">Live checks from auth, users, and payments services.</p>
       </div>
       <div className="grid">
+        <ServiceCard title="Auth service" query={authHealthQuery} />
         <ServiceCard title="Users service" query={usersHealthQuery} />
         <ServiceCard title="Payments service" query={paymentsHealthQuery} />
       </div>

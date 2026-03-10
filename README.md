@@ -9,7 +9,7 @@ This repository demonstrates the intended GenX API adoption model inside an Nx m
 5. GenX API generates an SDK package
 6. consumer apps adopt the SDK package explicitly
 
-At the current stage, `web-app` is the only consumer making live SDK calls. `backoffice-app` and `mobile-app` now share the same runtime config contract but still stop short of full UI flows.
+At the current stage, `web-app` is the only consumer making live authenticated SDK calls. `backoffice-app` and `mobile-app` expose the same auth-service and SDK bootstrap shape but still stop short of full UI flows.
 
 ## Ownership Boundary
 
@@ -34,22 +34,27 @@ GenX API starts only after the contract has already been published.
 - `apps/payments-service`
   - NestJS service on port `3002`
   - owns Swagger generation and contract publication
+- `apps/auth-service`
+  - NestJS service on port `3003`
+  - owns login, JWT issuance, and contract publication
 - `docs/contracts/users-service`
   - published users-service contract artefacts
 - `docs/contracts/payments-service`
   - published payments-service contract artefacts
+- `docs/contracts/auth-service`
+  - published auth-service contract artefacts
 - `sdk/users-sdk`
   - generated from the published users-service contract
 - `sdk/payments-sdk`
   - generated from the published payments-service contract
-- `packages/demo-runtime`
-  - shared demo personas and consumer runtime config helpers
+- `libs/auth-client`
+  - shared auth-service client helpers and session types for consumers
 - `apps/web-app`
   - consumer app that imports SDK packages through normal package boundaries
 - `apps/backoffice-app`
-  - internal consumer stub using the shared runtime config contract
+  - internal consumer stub showing the auth-service and SDK bootstrap shape
 - `apps/mobile-app`
-  - mobile consumer stub using the shared runtime config contract
+  - mobile consumer stub showing the auth-service and SDK bootstrap shape
 
 ## Backend Contract Lifecycle
 
@@ -63,6 +68,7 @@ The services keep normal NestJS Swagger behavior:
 
 Published contracts are created with dedicated service-owned targets:
 
+- `nx run auth-service:publish-contract`
 - `nx run users-service:publish-contract`
 - `nx run payments-service:publish-contract`
 
@@ -97,6 +103,7 @@ npm install
 Publish the current service contracts:
 
 ```bash
+nx run auth-service:publish-contract
 nx run users-service:publish-contract
 nx run payments-service:publish-contract
 ```
@@ -119,14 +126,24 @@ npm run serve:demo
 Open:
 
 - Web app: `http://localhost:4200`
+- Auth Swagger UI: `http://localhost:3003/swagger`
 - Users Swagger UI: `http://localhost:3001/swagger`
 - Payments Swagger UI: `http://localhost:3002/swagger`
+
+## Demo Credentials
+
+Use the seeded auth-service accounts to log into `web-app`:
+
+- Customer: `bob.smith@example.com` / `bob-demo-password`
+- Support: `diana.miller@example.com` / `diana-demo-password`
+- Admin: `alice.johnson@example.com` / `alice-demo-password`
 
 ## Useful Commands
 
 Export service Swagger locally:
 
 ```bash
+nx run auth-service:export-swagger
 nx run users-service:export-swagger
 nx run payments-service:export-swagger
 ```
@@ -134,6 +151,7 @@ nx run payments-service:export-swagger
 Publish service-owned contracts:
 
 ```bash
+nx run auth-service:publish-contract
 nx run users-service:publish-contract
 nx run payments-service:publish-contract
 ```
@@ -172,15 +190,18 @@ Integrated now:
 
 - service-owned Swagger generation
 - service-owned contract publication
+- auth-service login and JWT issuance
 - GenX API generation from published contracts
 - independently releasable SDK packages
 - explicit package consumption in `web-app`
-- one shared runtime config shape for `web-app`, `mobile-app`, and `backoffice-app`
-- demo persona selection and token storage in `web-app`
+- app-owned session storage in `web-app`
+- shared auth-service client helpers under `libs/auth-client`
 
 Not yet integrated:
 
+- `backoffice-app` login flow
 - `backoffice-app` making live SDK requests
+- `mobile-app` login flow
 - `mobile-app` making live SDK requests
 - a backend release automation tool such as semantic-release or Nx Release
 
@@ -188,13 +209,12 @@ If this repository migrates to Nx Release later, keep services and SDK packages 
 
 ## Runtime Adoption
 
-The repo now keeps one shared consumer-side convention for runtime wiring:
+The repo now keeps one shared consumer-side convention for auth and SDK wiring:
 
-- consumers pick a base URL per service at runtime
-- consumers provide a bearer token provider
-- SDK packages bind that once through `createUsersSdk(...)` and `createPaymentsSdk(...)`
-
-`packages/demo-runtime` exists only to keep the demo personas and runtime config shape consistent across `web-app`, `mobile-app`, and `backoffice-app`.
+- consumers authenticate against `auth-service`
+- each app keeps its own session storage and backend URLs
+- SDK packages are created once with a bearer token provider from that session
+- shared auth request helpers live in `libs/auth-client`
 
 ## More Detail
 

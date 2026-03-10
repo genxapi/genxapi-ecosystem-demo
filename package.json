@@ -3,13 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "serve:auth-service": "nx serve auth-service",
     "nx": "nx",
     "serve:users-service": "nx serve users-service",
     "serve:payments-service": "nx serve payments-service",
     "serve:web-app": "nx serve web-app",
     "serve:backoffice-app": "nx serve backoffice-app",
     "serve:mobile-app": "nx serve mobile-app",
-    "serve:demo": "nx run-many --target=serve --projects=users-service,payments-service,web-app --parallel=3",
+    "serve:demo": "nx run-many --target=serve --projects=auth-service,users-service,payments-service,web-app --parallel=4",
+    "swagger:export:auth": "nx run auth-service:export-swagger",
     "swagger:export:payments": "nx run payments-service:export-swagger",
     "swagger:export:users": "nx run users-service:export-swagger",
     "gen:sdk:payments": "nx run payments-sdk:generate",
@@ -18,7 +20,7 @@
     "graph": "nx graph"
   },
   "dependencies": {
-    "@genxapi/ecosystem-demo-runtime": "file:packages/demo-runtime",
+    "@genxapi/ecosystem-auth-client": "file:libs/auth-client",
     "@genxapi/ecosystem-users-sdk": "file:sdk/users-sdk",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",

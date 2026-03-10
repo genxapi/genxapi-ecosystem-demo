@@ -1,27 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import {
-  mobileDemoPersona,
+  mobileAuthServiceBaseUrl,
+  mobilePaymentsServiceBaseUrl,
   mobileRuntimeWarnings,
-  mobileSdkRuntime,
-} from './demo-runtime';
+  mobileUsersServiceBaseUrl,
+} from './runtime';
 
 export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.eyebrow}>genxapi ecosystem</Text>
       <Text style={styles.title}>Mobile App</Text>
-      <Text style={styles.subtitle}>Shared SDK runtime contract preview.</Text>
+      <Text style={styles.subtitle}>Auth-service and SDK bootstrap preview.</Text>
       <View style={styles.card}>
-        <Text style={styles.label}>Default persona</Text>
-        <Text style={styles.value}>
-          {mobileDemoPersona.label} ({mobileDemoPersona.role})
-        </Text>
+        <Text style={styles.label}>Auth service base URL</Text>
+        <Text style={styles.value}>{mobileAuthServiceBaseUrl || 'Not configured yet'}</Text>
         <Text style={styles.label}>Users SDK base URL</Text>
-        <Text style={styles.value}>{mobileSdkRuntime.users.baseUrl || 'Not configured yet'}</Text>
+        <Text style={styles.value}>{mobileUsersServiceBaseUrl || 'Not configured yet'}</Text>
         <Text style={styles.label}>Payments SDK base URL</Text>
         <Text style={styles.value}>
-          {mobileSdkRuntime.payments.baseUrl || 'Not configured yet'}
+          {mobilePaymentsServiceBaseUrl || 'Not configured yet'}
         </Text>
         {mobileRuntimeWarnings.map((warning) => (
           <Text key={warning} style={styles.warning}>

@@ -21,6 +21,7 @@ The intended sequence is:
 - Nx targets for serving, building, and exporting service Swagger
 - GenX API-driven SDK generation
 - SDK packages under `sdk/`
+- a separate auth boundary instead of polluting domain services with login logic
 - consumer imports through package names
 
 ## What Changed
@@ -39,6 +40,8 @@ That means:
 
 Each service has a `publish-contract` target that turns exported Swagger into published contract artefacts:
 
+- `docs/contracts/auth-service/<version>.json`
+- `docs/contracts/auth-service/latest.json`
 - `docs/contracts/users-service/<version>.json`
 - `docs/contracts/users-service/latest.json`
 - `docs/contracts/payments-service/<version>.json`
@@ -90,6 +93,7 @@ For a local run:
 
 ```bash
 npm install
+nx run auth-service:publish-contract
 nx run users-service:publish-contract
 nx run payments-service:publish-contract
 nx run users-sdk:build
@@ -118,13 +122,13 @@ The important message is:
 
 ## Runtime Convention
 
-The consumer-side runtime contract is now explicit:
+The consumer-side auth and runtime contract is now explicit:
 
-- consumers resolve service base URLs at runtime
-- consumers provide the bearer token source
-- SDK packages expose small factories that bind those values once
+- consumers authenticate against `auth-service`
+- each app owns its session storage and base URLs
+- SDK packages expose small factories that bind the app token provider once
 
-`packages/demo-runtime` keeps the demo personas and shared runtime config shape aligned across the consumer stubs without moving auth UX into the generated SDKs.
+`libs/auth-client` now provides the shared login client shape and session types without exposing seeded demo accounts in frontend code.
 
 ## Future Nx Release Direction
 

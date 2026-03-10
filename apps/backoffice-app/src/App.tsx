@@ -1,4 +1,8 @@
-import { backofficeDemoPersona, backofficeSdkRuntime } from './demo-runtime';
+import {
+  backofficeAuthServiceBaseUrl,
+  backofficePaymentsServiceBaseUrl,
+  backofficeUsersServiceBaseUrl,
+} from './runtime';
 
 export default function App() {
   return (
@@ -13,17 +17,17 @@ export default function App() {
       <section className="card">
         <h2>Runtime Config</h2>
         <ul>
-          <li>Persona: {backofficeDemoPersona.label} ({backofficeDemoPersona.role})</li>
-          <li>Users SDK base URL: {backofficeSdkRuntime.users.baseUrl}</li>
-          <li>Payments SDK base URL: {backofficeSdkRuntime.payments.baseUrl}</li>
+          <li>Auth service base URL: {backofficeAuthServiceBaseUrl}</li>
+          <li>Users SDK base URL: {backofficeUsersServiceBaseUrl}</li>
+          <li>Payments SDK base URL: {backofficePaymentsServiceBaseUrl}</li>
         </ul>
       </section>
       <section className="card">
         <h2>Adoption Model</h2>
         <ul>
-          <li>Configure the SDK once with a base URL and token provider.</li>
-          <li>Reuse the same runtime contract as `web-app` and `mobile-app`.</li>
-          <li>Keep app-specific auth UX outside the generated SDK packages.</li>
+          <li>Authenticate against auth-service and keep that session in the app shell.</li>
+          <li>Create the users and payments SDKs once from the stored token provider.</li>
+          <li>Keep app-specific login UX outside the generated SDK packages.</li>
         </ul>
       </section>
     </div>

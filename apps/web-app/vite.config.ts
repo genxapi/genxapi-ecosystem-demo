@@ -9,6 +9,11 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 4200,
       proxy: {
+        '/api/auth-service': {
+          target: env.VITE_AUTH_SERVICE_PROXY_TARGET ?? 'http://127.0.0.1:3003',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/auth-service/, ''),
+        },
         '/api/users-service': {
           target: env.VITE_USERS_SERVICE_PROXY_TARGET ?? 'http://127.0.0.1:3001',
           changeOrigin: true,

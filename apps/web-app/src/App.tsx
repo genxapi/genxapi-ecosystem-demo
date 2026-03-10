@@ -1,9 +1,7 @@
-import {
-  DEMO_PERSONAS,
-  type DemoPersonaId,
-} from '@genxapi/ecosystem-demo-runtime';
+import { useState, type FormEvent } from 'react';
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
-import { useDemoSession } from './auth/DemoSessionContext';
+import { authServiceBaseUrl } from './auth/client';
+import { useAuthSession } from './auth/AuthSessionContext';
 import DashboardPage from './pages/DashboardPage';
 import PaymentsPage from './pages/PaymentsPage';
 import UserDetailsPage from './pages/UserDetailsPage';
@@ -13,7 +11,20 @@ const linkClassName = ({ isActive }: { isActive: boolean }) =>
   isActive ? 'nav-link active' : 'nav-link';
 
 export default function App() {
-  const { isAuthenticated, isInternalViewer, persona, setPersonaId, signOut } = useDemoSession();
+  const { error, isAuthenticated, isInternalViewer, isPending, signOut, user, login } =
+    useAuthSession();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const didLogin = await login({ email, password });
+
+    if (didLogin) {
+      setPassword('');
+    }
+  };
 
   return (
     <div className="app">
@@ -22,7 +33,7 @@ export default function App() {
           <p className="eyebrow">genxapi ecosystem</p>
           <h1>GenX API Ecosystem Demo</h1>
           <p className="subhead">
-            Role-aware SDK adoption across users and payments services.
+            Auth-service login feeding the role-aware users and payments SDKs.
           </p>
         </div>
         <div className="header-actions">
@@ -42,34 +53,57 @@ export default function App() {
             ) : null}
           </nav>
           <section className="session-card">
-            <p className="eyebrow">Demo Session</p>
-            <div className="toolbar">
-              <select
-                className="select"
-                value={persona?.id ?? ''}
-                onChange={(event) =>
-                  setPersonaId((event.target.value || null) as DemoPersonaId | null)
-                }
-              >
-                <option value="">Signed out</option>
-                {DEMO_PERSONAS.map((candidate) => (
-                  <option key={candidate.id} value={candidate.id}>
-                    {candidate.label} · {candidate.role}
-                  </option>
-                ))}
-              </select>
-              <button className="button button--secondary" type="button" onClick={signOut}>
-                Clear
-              </button>
-            </div>
-            <p className="muted">
-              {persona ? persona.description : 'No bearer token is being sent to the secured routes.'}
-            </p>
-            <p className="session-note">
-              {isAuthenticated && isInternalViewer
-                ? 'Internal routes are available in this pre-Phase-3 shell.'
-                : 'Customer /me and /me/payments flows land in Phase 3.'}
-            </p>
+            <p className="eyebrow">Auth Session</p>
+            {isAuthenticated && user ? (
+              <div className="stack">
+                <p className="session-user">{user.name}</p>
+                <p className="muted">{user.email}</p>
+                <div className="toolbar">
+                  <span className="badge">{user.role}</span>
+                  <button className="button button--secondary" type="button" onClick={signOut}>
+                    Sign out
+                  </button>
+                </div>
+                <p className="session-note">
+                  {isInternalViewer
+                    ? 'Internal routes are available after login for support and admin users.'
+                    : 'Customer /me and /me/payments flows land in Phase 3.'}
+                </p>
+              </div>
+            ) : (
+              <form className="stack" onSubmit={handleLogin}>
+                <label className="form-field">
+                  <span>Email</span>
+                  <input
+                    className="input"
+                    type="email"
+                    autoComplete="username"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                  />
+                </label>
+                <label className="form-field">
+                  <span>Password</span>
+                  <input
+                    className="input"
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="Your password"
+                  />
+                </label>
+                <button className="button button--primary" type="submit" disabled={isPending}>
+                  {isPending ? 'Signing in…' : 'Sign in'}
+                </button>
+                <p className="muted">Auth service: {authServiceBaseUrl}</p>
+                <p className="session-note">
+                  Use one of the seeded demo credentials documented for the auth service.
+                </p>
+              </form>
+            )}
+            {error ? <p className="state error">Error: {error}</p> : null}
           </section>
         </div>
       </header>
