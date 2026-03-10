@@ -6,6 +6,7 @@ node_modules
 /.nx/cache
 /.nx/workspace-data
 /.cache
+/.npm-cache
 .vscode
 .DS_Store
 .env

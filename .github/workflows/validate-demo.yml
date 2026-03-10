@@ -1,0 +1,69 @@
+name: Validate Demo
+
+on:
+  pull_request:
+    paths:
+      - ".github/**"
+      - "apps/**"
+      - "docs/**"
+      - "genxapi.config.json"
+      - "genxapi.users.config.json"
+      - "libs/**"
+      - "nx.json"
+      - "package-lock.json"
+      - "package.json"
+      - "sdk/**"
+      - "tools/**"
+      - "tsconfig*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/**"
+      - "apps/**"
+      - "docs/**"
+      - "genxapi.config.json"
+      - "genxapi.users.config.json"
+      - "libs/**"
+      - "nx.json"
+      - "package-lock.json"
+      - "package.json"
+      - "sdk/**"
+      - "tools/**"
+      - "tsconfig*.json"
+  workflow_dispatch:
+
+concurrency:
+  group: validate-demo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify demo contracts, SDKs, and browser consumers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish contracts and rebuild SDKs
+        run: npm run demo:prepare
+
+      - name: Build browser consumers
+        run: npm run build:browser-apps
+
+      - name: Smoke check users SDK tarball
+        run: npm run verify:sdk:users
+
+      - name: Smoke check payments SDK tarball
+        run: npm run verify:sdk:payments

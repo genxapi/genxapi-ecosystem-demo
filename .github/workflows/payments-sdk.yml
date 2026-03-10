@@ -1,4 +1,4 @@
-name: Payments SDK
+name: Payments SDK Pipeline
 
 on:
   pull_request:
@@ -39,8 +39,16 @@ on:
           - minor
           - major
 
+permissions:
+  contents: read
+
+concurrency:
+  group: payments-sdk-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   generate:
+    name: Generate and verify @genxapi-labs/ecosystem-payments-sdk
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -63,13 +71,17 @@ jobs:
       - name: Build SDK package
         working-directory: sdk/payments-sdk
         run: npm run build
+      - name: Smoke check SDK tarball
+        run: npm run verify:sdk:payments
       - name: Upload SDK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: payments-sdk
+          name: payments-sdk-package
           path: sdk/payments-sdk
+          if-no-files-found: error
 
   publish:
+    name: Publish @genxapi-labs/ecosystem-payments-sdk
     runs-on: ubuntu-latest
     needs: generate
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish == true }}
@@ -104,6 +116,8 @@ jobs:
       - name: Build SDK package
         working-directory: sdk/payments-sdk
         run: npm run build
+      - name: Smoke check SDK tarball
+        run: npm run verify:sdk:payments
       - name: Bump SDK package version
         working-directory: sdk/payments-sdk
         run: npm version ${{ inputs.releaseType }} --no-git-tag-version

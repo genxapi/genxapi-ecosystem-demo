@@ -153,6 +153,8 @@ If you are testing on a physical device, replace `127.0.0.1` with your machine's
 | `npm run demo:serve` | Start `auth-service`, `users-service`, `payments-service`, `web-app`, and `backoffice-app` |
 | `npm run demo:serve:mobile` | Start the Expo mobile app |
 | `npm run build:browser-apps` | Verify `web-app` and `backoffice-app` compile against the built SDK packages |
+| `npm run verify:demo` | Run the recommended release-readiness check for contract publication, SDK generation, and browser consumer builds |
+| `npm run verify:release` | Extend `verify:demo` with npm tarball smoke checks for both demo SDK packages |
 | `npm run graph` | Inspect the Nx dependency graph |
 
 ## Recommended Live Demo Flow
@@ -198,7 +200,8 @@ service publishes contract -> GenX API generates SDK -> multiple apps adopt the 
 
 - The contract registry in this repo is local and file-based for demo clarity.
 - The mobile app is optional in the default demo flow because Expo needs separate runtime configuration.
-- There is still no release automation layer such as Nx Release or semantic-release in this repository.
+- There is still no release automation layer such as Nx Release or semantic-release in this repository; SDK publishes remain manual maintainer choices.
+- Demo SDK packages intentionally stay under `@genxapi-labs/*` so the repo demonstrates adoption without expanding the core `@genxapi/*` product namespace.
 
 ## Supporting Docs
 

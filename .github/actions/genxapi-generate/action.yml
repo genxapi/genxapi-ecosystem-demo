@@ -1,14 +1,14 @@
-name: GenXAPI Generate
-description: Generate SDKs from published contracts with GenXAPI
+name: GenX API Generate
+description: Generate demo SDKs from published contracts with GenX API
 inputs:
   config:
-    description: Path to the GenXAPI config file
+    description: Path to the GenX API config file
     required: true
   contractPath:
     description: Optional pinned published contract snapshot to consume in CI
     required: false
   logLevel:
-    description: GenXAPI log level
+    description: GenX API log level
     required: false
     default: info
 runs:
