@@ -64,13 +64,13 @@ export default function App() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <div className="brand-mark">BO</div>
+          <div className="brand-mark">GX</div>
           <div className="stack">
-            <p className="eyebrow">genxapi ecosystem</p>
-            <h1>Backoffice App</h1>
+            <p className="eyebrow">GenX API Internal Surface</p>
+            <h1>Operations Console</h1>
             <p className="sidebar-copy">
-              Internal operations consumer built on the same published contracts and generated SDKs
-              as the customer app.
+              Internal operations consumer built on the same published contracts and generated SDK
+              packages as the customer surfaces.
             </p>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function App() {
 
         <section className="sidebar-card runtime-card">
           <p className="label">SDK boundary</p>
-          <p className="value">Runtime-configured generated clients</p>
+          <p className="value">Runtime-configured SDK packages</p>
           <p className="muted">
             Base URLs and bearer token injection stay at the app boundary instead of inside page
             components.

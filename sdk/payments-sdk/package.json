@@ -1,7 +1,7 @@
 {
-  "name": "genxapi-ecosystem-payments-sdk",
+  "name": "@genxapi-labs/ecosystem-payments-sdk",
   "version": "0.1.0",
-  "description": "Generated payments SDK for the GenX API ecosystem demo",
+  "description": "Generated payments SDK package for the GenX API ecosystem demo",
   "type": "module",
   "exports": {
     "./package.json": "./package.json",

@@ -1,7 +1,7 @@
 {
-  "$schema": "https://raw.githubusercontent.com/genxapi/genxapi/main/schemas/genxapi.schema.json",
+  "$schema": "https://raw.githubusercontent.com/genxapi/genxapi/main/packages/cli/schemas/genxapi.schema.json",
   "project": {
-    "name": "genxapi-ecosystem-payments-sdk",
+    "name": "@genxapi-labs/ecosystem-payments-sdk",
     "directory": "./sdk/payments-sdk",
     "template": "orval",
     "output": "./src",

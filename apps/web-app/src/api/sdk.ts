@@ -1,5 +1,5 @@
-import { createUsersSdk, users } from '@genxapi/ecosystem-users-sdk';
-import { createPaymentsSdk, payments } from 'genxapi-ecosystem-payments-sdk';
+import { createUsersSdk, users } from '@genxapi-labs/ecosystem-users-sdk';
+import { createPaymentsSdk, payments } from '@genxapi-labs/ecosystem-payments-sdk';
 import { getCurrentAuthAccessToken } from '../auth/auth-session';
 
 type AccessTokenProvider =

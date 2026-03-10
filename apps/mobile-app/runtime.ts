@@ -1,6 +1,6 @@
-import { createAuthClient } from '@genxapi/ecosystem-auth-client';
-import { createUsersSdk } from '@genxapi/ecosystem-users-sdk';
-import { createPaymentsSdk } from 'genxapi-ecosystem-payments-sdk';
+import { createAuthClient } from '@genxapi-labs/ecosystem-auth-client';
+import { createUsersSdk } from '@genxapi-labs/ecosystem-users-sdk';
+import { createPaymentsSdk } from '@genxapi-labs/ecosystem-payments-sdk';
 
 export type MobileAccessTokenProvider =
   | string

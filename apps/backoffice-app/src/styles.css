@@ -1,21 +1,27 @@
 :root {
-  --ink-strong: #f3f4f6;
-  --ink-soft: #cbd5e1;
-  --copy: #0f172a;
-  --copy-soft: #475569;
-  --line: #dbe3ee;
+  color-scheme: light;
+  --ink-strong: #f5f8ff;
+  --ink-soft: #b8c4df;
+  --copy: #0c1224;
+  --copy-soft: #5d6682;
+  --line: #e3e7f2;
   --panel: rgba(255, 255, 255, 0.92);
   --panel-strong: #ffffff;
-  --sidebar: #121826;
-  --sidebar-line: rgba(148, 163, 184, 0.18);
-  --accent: #f59e0b;
-  --accent-soft: rgba(245, 158, 11, 0.16);
-  --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  --panel-soft: #f4f7ff;
+  --sidebar: #0c1224;
+  --sidebar-line: rgba(159, 176, 214, 0.18);
+  --primary: #1e4af5;
+  --primary-soft: #5fa9ff;
+  --accent: #1bb36f;
+  --primary-tint: rgba(30, 74, 245, 0.14);
+  --accent-tint: rgba(27, 179, 111, 0.14);
+  --shadow: 0 24px 56px rgba(12, 18, 36, 0.12);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   color: var(--copy);
   background:
-    radial-gradient(circle at top right, rgba(245, 158, 11, 0.14), transparent 24%),
-    linear-gradient(180deg, #eef2f7 0%, #dde6f0 100%);
+    radial-gradient(circle at top right, rgba(30, 74, 245, 0.16), transparent 22%),
+    radial-gradient(circle at top left, rgba(27, 179, 111, 0.1), transparent 22%),
+    linear-gradient(180deg, #f8fbff 0%, #edf3ff 100%);
 }
 
 * {
@@ -26,8 +32,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top right, rgba(245, 158, 11, 0.14), transparent 24%),
-    linear-gradient(180deg, #eef2f7 0%, #dde6f0 100%);
+    radial-gradient(circle at top right, rgba(30, 74, 245, 0.16), transparent 22%),
+    radial-gradient(circle at top left, rgba(27, 179, 111, 0.1), transparent 22%),
+    linear-gradient(180deg, #f8fbff 0%, #edf3ff 100%);
 }
 
 a {
@@ -36,24 +43,29 @@ a {
 }
 
 code {
-  font-family: 'SFMono-Regular', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-family: "DM Mono", "SFMono-Regular", Menlo, monospace;
   font-size: 0.92em;
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-size: clamp(2rem, 3vw, 2.9rem);
   color: #ffffff;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 
 h2 {
   margin: 0 0 10px;
-  font-size: 1.5rem;
+  font-size: clamp(1.45rem, 2.3vw, 1.95rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 h3 {
   margin: 0 0 10px;
-  font-size: 1.12rem;
+  font-size: 1.1rem;
+  line-height: 1.2;
 }
 
 .app-shell {
@@ -65,8 +77,9 @@ h3 {
 .sidebar {
   padding: 36px 24px;
   background:
-    radial-gradient(circle at top right, rgba(245, 158, 11, 0.22), transparent 28%),
-    linear-gradient(180deg, #182030 0%, #121826 100%);
+    radial-gradient(circle at top right, rgba(95, 169, 255, 0.24), transparent 26%),
+    radial-gradient(circle at bottom left, rgba(27, 179, 111, 0.14), transparent 22%),
+    linear-gradient(180deg, #141c33 0%, var(--sidebar) 100%);
   color: var(--ink-strong);
   border-right: 1px solid var(--sidebar-line);
   display: flex;
@@ -81,23 +94,23 @@ h3 {
 }
 
 .brand-mark {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   letter-spacing: 0.08em;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(249, 115, 22, 0.85));
-  color: #111827;
-  box-shadow: 0 14px 30px rgba(245, 158, 11, 0.18);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  box-shadow: 0 18px 34px rgba(30, 74, 245, 0.26);
 }
 
 .sidebar-copy {
   margin: 0;
   color: var(--ink-soft);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .content {
@@ -107,13 +120,14 @@ h3 {
 .eyebrow {
   margin: 0 0 8px;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.75rem;
-  color: var(--copy-soft);
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  color: var(--primary);
+  font-weight: 700;
 }
 
 .sidebar .eyebrow {
-  color: rgba(226, 232, 240, 0.78);
+  color: #9fc0ff;
 }
 
 .page {
@@ -137,7 +151,7 @@ h3 {
 .muted {
   margin: 0;
   color: var(--copy-soft);
-  line-height: 1.55;
+  line-height: 1.65;
 }
 
 .sidebar .muted {
@@ -146,12 +160,12 @@ h3 {
 
 .card,
 .sidebar-card {
-  padding: 20px;
-  border-radius: 20px;
+  padding: 24px;
+  border-radius: 24px;
   border: 1px solid var(--line);
   background: var(--panel);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 
 .sidebar-card {
@@ -162,7 +176,7 @@ h3 {
 
 .hero-panel {
   background:
-    linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(15, 23, 42, 0.03)),
+    linear-gradient(135deg, rgba(30, 74, 245, 0.1), rgba(255, 255, 255, 0.98) 58%, rgba(27, 179, 111, 0.08)),
     var(--panel-strong);
 }
 
@@ -170,7 +184,7 @@ h3 {
 .summary-card .value,
 .detail-list .value,
 .persona-card .value {
-  font-size: 1.1rem;
+  font-size: 1.08rem;
   font-weight: 700;
   color: var(--copy);
 }
@@ -181,14 +195,15 @@ h3 {
 
 .label {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--copy-soft);
+  font-weight: 700;
 }
 
 .sidebar .label {
-  color: rgba(226, 232, 240, 0.7);
+  color: rgba(216, 226, 248, 0.72);
 }
 
 .app-nav {
@@ -199,24 +214,29 @@ h3 {
 
 .nav-link {
   padding: 14px 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 18px;
+  border: 1px solid rgba(159, 176, 214, 0.14);
   background: rgba(255, 255, 255, 0.03);
   display: flex;
   flex-direction: column;
   gap: 4px;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .nav-link:hover {
-  border-color: rgba(245, 158, 11, 0.5);
-  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(95, 169, 255, 0.42);
+  background: rgba(30, 74, 245, 0.12);
   transform: translateX(2px);
 }
 
 .nav-link.active {
-  border-color: rgba(245, 158, 11, 0.55);
-  background: var(--accent-soft);
+  border-color: rgba(95, 169, 255, 0.55);
+  background: rgba(30, 74, 245, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(95, 169, 255, 0.14);
 }
 
 .nav-link__label {
@@ -227,7 +247,7 @@ h3 {
 .nav-link__help,
 .nav-empty {
   color: var(--ink-soft);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .stack {
@@ -262,9 +282,15 @@ h3 {
   gap: 14px;
 }
 
+.summary-card {
+  background: var(--panel-soft);
+  border-color: rgba(30, 74, 245, 0.08);
+  box-shadow: none;
+}
+
 .persona-card--active {
-  border-color: rgba(245, 158, 11, 0.45);
-  box-shadow: 0 18px 44px rgba(245, 158, 11, 0.14);
+  border-color: rgba(30, 74, 245, 0.34);
+  box-shadow: 0 20px 42px rgba(30, 74, 245, 0.12);
 }
 
 .persona-meta {
@@ -280,12 +306,15 @@ h3 {
 
 .button {
   border: 0;
-  border-radius: 12px;
-  padding: 10px 14px;
+  border-radius: 14px;
+  padding: 10px 16px;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .button:hover:not(:disabled) {
@@ -294,17 +323,19 @@ h3 {
 
 .button:disabled {
   cursor: wait;
-  opacity: 0.7;
+  opacity: 0.72;
 }
 
 .button--primary {
-  background: #111827;
+  background: linear-gradient(135deg, var(--primary), #1940d6);
   color: #ffffff;
+  box-shadow: 0 16px 30px rgba(30, 74, 245, 0.22);
 }
 
 .button--secondary {
-  background: #e2e8f0;
-  color: #111827;
+  background: var(--panel-strong);
+  color: var(--copy);
+  border: 1px solid var(--line);
 }
 
 .table-wrap {
@@ -322,20 +353,20 @@ h3 {
 .table td {
   text-align: left;
   padding: 12px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
 
 .table thead {
-  background: #f8fafc;
+  background: rgba(244, 247, 255, 0.94);
   color: var(--copy-soft);
   font-size: 0.82rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .table tbody tr:hover {
-  background: rgba(245, 158, 11, 0.04);
+  background: rgba(30, 74, 245, 0.04);
 }
 
 .detail-list {
@@ -358,68 +389,60 @@ h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  background: #e2e8f0;
-  color: #334155;
+  background: rgba(12, 18, 36, 0.06);
+  color: var(--copy-soft);
 }
 
 .badge--customer {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: rgba(93, 102, 130, 0.12);
+  color: var(--copy-soft);
 }
 
 .badge--support {
-  background: #cffafe;
-  color: #0f766e;
+  background: rgba(95, 169, 255, 0.14);
+  color: var(--primary);
 }
 
 .badge--admin {
-  background: #fde68a;
-  color: #92400e;
+  background: rgba(27, 179, 111, 0.14);
+  color: #0f7a4a;
 }
 
-.badge--active {
-  background: #dcfce7;
-  color: #166534;
+.badge--active,
+.badge--completed {
+  background: rgba(27, 179, 111, 0.14);
+  color: #0f7a4a;
 }
 
-.badge--inactive {
-  background: #fee2e2;
-  color: #991b1b;
+.badge--inactive,
+.badge--failed {
+  background: rgba(220, 38, 38, 0.1);
+  color: #b42318;
 }
 
 .badge--pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.badge--completed {
-  background: #dbeafe;
-  color: #1e3a8a;
-}
-
-.badge--failed {
-  background: #fee2e2;
-  color: #991b1b;
+  background: rgba(217, 119, 6, 0.12);
+  color: #b45309;
 }
 
 .badge--refunded {
-  background: #ede9fe;
-  color: #5b21b6;
+  background: rgba(76, 81, 255, 0.1);
+  color: #4254d0;
 }
 
 .inline-link {
-  color: #b45309;
+  color: var(--primary);
   font-weight: 700;
 }
 
 .inline-link:hover {
-  color: #92400e;
+  color: #1940d6;
 }
 
 .session-user {
@@ -434,7 +457,7 @@ h3 {
 }
 
 .state.error {
-  color: #b91c1c;
+  color: #b42318;
 }
 
 @media (max-width: 960px) {
@@ -456,12 +479,16 @@ h3 {
 
   .card,
   .sidebar-card {
-    padding: 16px;
-    border-radius: 16px;
+    padding: 20px;
+    border-radius: 22px;
   }
 
   .table th,
   .table td {
     padding: 10px;
+  }
+
+  .button {
+    width: 100%;
   }
 }

@@ -24,7 +24,7 @@ export default function UsersPage() {
         <p className="subhead">
           The users list is loaded from the generated users SDK via <code>/users</code>. Visible
           workflows follow the stored <code>{formatLabel(role ?? undefined)}</code> claim instead of
-          treating backoffice as a public app.
+          treating the operations console as a public app.
         </p>
       </section>
 

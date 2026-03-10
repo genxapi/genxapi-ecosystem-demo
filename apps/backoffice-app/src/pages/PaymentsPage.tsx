@@ -26,7 +26,7 @@ export default function PaymentsPage() {
             <h2>Admin payments queue</h2>
             <p className="subhead">
               This screen uses the generated payments SDK via <code>/payments</code> and is only
-              exposed to admin claims inside the backoffice app.
+              exposed to admin claims inside the operations console.
             </p>
           </div>
           <div className="toolbar">

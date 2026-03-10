@@ -1,4 +1,4 @@
-import type { LoginCredentials } from '@genxapi/ecosystem-auth-client';
+import type { LoginCredentials } from '@genxapi-labs/ecosystem-auth-client';
 
 export interface DemoPersona extends LoginCredentials {
   id: 'bob-smith' | 'ethan-williams';

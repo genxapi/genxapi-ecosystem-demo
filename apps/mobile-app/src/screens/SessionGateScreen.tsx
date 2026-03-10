@@ -7,6 +7,7 @@ import {
   mobileUsersServiceBaseUrl,
 } from '../../runtime';
 import { useAuthSession } from '../auth/AuthSessionContext';
+import { cardShadow, theme } from '../theme';
 
 const runtimeRows = [
   {
@@ -31,12 +32,12 @@ export default function SessionGateScreen() {
     isAuthenticated && !isCustomer ? 'Switch to a customer demo persona' : 'Choose a customer demo session';
   const description =
     isAuthenticated && !isCustomer
-      ? 'This mobile app is intentionally scoped to customer self-service. Internal support and admin flows stay in backoffice-app.'
-      : 'Each persona signs into auth-service, then the app loads only /me and /me/payments through the generated SDK layer.';
+      ? 'This mobile app is intentionally scoped to customer self-service. Internal support and admin flows stay in the operations console.'
+      : 'Each persona signs into auth-service, then the app loads only /me and /me/payments through the generated SDK package layer.';
 
   return (
     <View style={styles.screen}>
-      <View style={styles.card}>
+      <View style={styles.heroCard}>
         <Text style={styles.eyebrow}>Customer Access</Text>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
@@ -112,15 +113,24 @@ const styles = StyleSheet.create({
   screen: {
     gap: 16,
   },
-  card: {
-    backgroundColor: '#fffaf3',
-    borderColor: '#d9d2c3',
-    borderRadius: 24,
+  heroCard: {
+    backgroundColor: theme.colors.surfaceSoft,
+    borderColor: theme.colors.borderStrong,
+    borderRadius: theme.radius.lg,
     borderWidth: 1,
-    padding: 20,
+    padding: theme.spacing.lg,
+    ...cardShadow,
+  },
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+    padding: theme.spacing.lg,
+    ...cardShadow,
   },
   eyebrow: {
-    color: '#7b6b4f',
+    color: theme.colors.primary,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
@@ -128,12 +138,12 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 22,
     fontWeight: '700',
   },
   description: {
-    color: '#5d665f',
+    color: theme.colors.muted,
     fontSize: 15,
     lineHeight: 22,
     marginTop: 10,
@@ -148,50 +158,50 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   personaLabel: {
-    color: '#7b6b4f',
+    color: theme.colors.primary,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
   personaName: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 20,
     fontWeight: '700',
   },
   personaEmail: {
-    color: '#4b5a51',
+    color: theme.colors.muted,
     fontSize: 14,
   },
   personaDescription: {
-    color: '#5d665f',
+    color: theme.colors.muted,
     fontSize: 14,
     lineHeight: 20,
     marginTop: 14,
     marginBottom: 18,
   },
   badge: {
-    backgroundColor: '#d9f3d7',
+    backgroundColor: theme.colors.surfaceSoft,
     borderRadius: 999,
     marginLeft: 12,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   badgeText: {
-    color: '#245b30',
+    color: theme.colors.primary,
     fontSize: 12,
     fontWeight: '700',
     textTransform: 'capitalize',
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#123524',
-    borderRadius: 18,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radius.md,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   primaryButtonText: {
-    color: '#f8fbf6',
+    color: theme.colors.surface,
     fontSize: 15,
     fontWeight: '700',
   },
@@ -203,7 +213,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   runtimeLabel: {
-    color: '#7b6b4f',
+    color: theme.colors.primary,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
@@ -211,30 +221,32 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   runtimeValue: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 14,
     lineHeight: 20,
   },
   warningText: {
-    color: '#8b3d19',
+    color: theme.colors.warning,
     fontSize: 14,
     lineHeight: 20,
   },
   errorText: {
-    color: '#a11d1d',
+    color: theme.colors.danger,
     fontSize: 14,
     lineHeight: 20,
     marginTop: 12,
   },
   secondaryButton: {
     alignItems: 'center',
-    backgroundColor: '#eff1eb',
-    borderRadius: 18,
+    backgroundColor: theme.colors.surfaceSoft,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   secondaryButtonText: {
-    color: '#233127',
+    color: theme.colors.navy,
     fontSize: 14,
     fontWeight: '700',
   },

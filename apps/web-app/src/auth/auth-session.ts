@@ -1,7 +1,7 @@
 import {
   AUTH_SESSION_STORAGE_KEY,
   type AuthSession,
-} from '@genxapi/ecosystem-auth-client';
+} from '@genxapi-labs/ecosystem-auth-client';
 
 export interface AuthSessionState {
   session: AuthSession | null;

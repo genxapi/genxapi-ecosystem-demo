@@ -10,7 +10,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@genxapi/ecosystem-auth-client": "file:../../libs/auth-client",
+    "@genxapi-labs/ecosystem-auth-client": "file:../../libs/auth-client",
     "expo": "^50.0.0",
     "expo-status-bar": "~1.11.0",
     "react": "18.2.0",

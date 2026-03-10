@@ -1,4 +1,4 @@
-import { isInternalRole, type LoginCredentials } from '@genxapi/ecosystem-auth-client';
+import { isInternalRole, type LoginCredentials } from '@genxapi-labs/ecosystem-auth-client';
 import {
   createContext,
   useContext,
@@ -39,7 +39,7 @@ export const AuthSessionProvider = ({ children }: PropsWithChildren) => {
       const nextSession = await backofficeAuthClient.login(credentials);
 
       if (!isInternalRole(nextSession.user.role)) {
-        throw new Error('This backoffice app only supports support and admin demo personas.');
+        throw new Error('This operations console only supports support and admin demo personas.');
       }
 
       persistAuthSession(nextSession);

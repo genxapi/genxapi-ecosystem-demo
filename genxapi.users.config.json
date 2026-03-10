@@ -1,8 +1,8 @@
 {
-  "$schema": "https://raw.githubusercontent.com/genxapi/genxapi/main/schemas/genxapi.schema.json",
+  "$schema": "https://raw.githubusercontent.com/genxapi/genxapi/main/packages/cli/schemas/genxapi.schema.json",
   "logLevel": "info",
   "project": {
-    "name": "@genxapi/ecosystem-users-sdk",
+    "name": "@genxapi-labs/ecosystem-users-sdk",
     "directory": "./sdk/users-sdk",
     "template": "orval",
     "output": "./src",

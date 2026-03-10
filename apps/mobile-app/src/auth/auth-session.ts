@@ -1,4 +1,4 @@
-import type { AuthSession } from '@genxapi/ecosystem-auth-client';
+import type { AuthSession } from '@genxapi-labs/ecosystem-auth-client';
 
 export interface AuthSessionState {
   session: AuthSession | null;

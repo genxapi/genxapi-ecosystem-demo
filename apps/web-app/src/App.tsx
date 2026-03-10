@@ -25,11 +25,11 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="hero-copy">
-          <p className="eyebrow">genxapi ecosystem</p>
-          <h1>Customer Self-Service Demo</h1>
+          <p className="eyebrow">GenX API Customer Surface</p>
+          <h1>Customer Portal</h1>
           <p className="subhead">
-            `web-app` now consumes the runtime-configured generated SDKs as a customer app, loading
-            only the authenticated user&apos;s profile and payments.
+            Customer-facing consumer that adopts runtime-configured SDK packages generated from
+            published service contracts, loading only the authenticated user&apos;s profile and payments.
           </p>
         </div>
         <div className="header-actions">
@@ -57,7 +57,7 @@ export default function App() {
                 </div>
                 <p className="session-note">
                   This session drives the customer-only navigation and powers `/me` plus
-                  `/me/payments` through the generated SDK layer.
+                  `/me/payments` through the generated SDK package layer.
                 </p>
               </div>
             ) : (
