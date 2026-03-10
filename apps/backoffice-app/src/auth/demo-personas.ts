@@ -1,4 +1,4 @@
-import type { LoginCredentials, UserRole } from '@genxapi/ecosystem-auth-client';
+import type { LoginCredentials, UserRole } from '@genxapi-labs/ecosystem-auth-client';
 
 type InternalRole = Extract<UserRole, 'support' | 'admin'>;
 

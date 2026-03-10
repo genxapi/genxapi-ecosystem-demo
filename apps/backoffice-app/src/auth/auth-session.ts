@@ -3,7 +3,7 @@ import {
   isInternalRole,
   type AuthSession,
   type UserRole,
-} from '@genxapi/ecosystem-auth-client';
+} from '@genxapi-labs/ecosystem-auth-client';
 
 export interface AuthSessionState {
   session: AuthSession | null;

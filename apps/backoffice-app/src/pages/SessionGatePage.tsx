@@ -18,7 +18,7 @@ export default function SessionGatePage() {
       ? 'Switch to an internal persona'
       : 'Choose an internal demo session';
   const description = isInternal
-    ? 'This backoffice app authenticates against auth-service, then routes internal users and payments calls through the generated SDK layer.'
+    ? 'This operations console authenticates against auth-service, then routes internal users and payments calls through the generated SDK package layer.'
     : isAuthenticated
       ? 'Customer claims are not valid here. Pick a support or admin persona to unlock internal workflows.'
       : 'Each button signs into auth-service with a seeded support or admin account. The app does not build a separate login product flow.';
@@ -32,7 +32,7 @@ export default function SessionGatePage() {
         {isAuthenticated && user && !isInternal ? (
           <p className="state error">
             Current session: {user.name} ({formatLabel(user.role)}). Customer claims are blocked in
-            the backoffice app.
+            the operations console.
           </p>
         ) : null}
         {isInternal && user ? (
@@ -94,8 +94,8 @@ export default function SessionGatePage() {
           <p className="muted">Payments SDK base URL: {backofficePaymentsServiceBaseUrl}</p>
           <p className="muted">
             This app stays on internal routes such as <code>/users</code>, <code>/users/:id</code>,
-            and <code>/payments</code>. Customer-only <code>/me</code> flows remain in{' '}
-            <code>web-app</code>.
+            and <code>/payments</code>. Customer-only <code>/me</code> flows remain in the customer
+            portal.
           </p>
           {isAuthenticated && user && !isInternal ? (
             <button className="button button--secondary" type="button" onClick={signOut}>

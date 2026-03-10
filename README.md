@@ -1,12 +1,12 @@
 # GenX API Ecosystem Demo
 
-This repository is a presentation-ready proof of the GenX API ecosystem inside an Nx monorepo.
+End-to-end proof of the GenX API open source ecosystem inside an Nx monorepo.
 
-It demonstrates one clear boundary:
+It shows the full handoff from service-owned contract publication to GenX API SDK generation to multi-consumer adoption:
 
 - backend services own Swagger and contract publication
-- GenX API starts from those published contracts
-- generated SDK packages remain independent deliverables
+- [GenX API](https://github.com/genxapi/genxapi) starts from those published contracts
+- generated SDK packages remain independent demo deliverables
 - consumer apps adopt the SDKs through normal package boundaries
 
 The demo now includes three services, three consumers, and role-aware JWT personas:
@@ -15,12 +15,23 @@ The demo now includes three services, three consumers, and role-aware JWT person
 - `mobile-app`: customer self-service in Expo / React Native
 - `backoffice-app`: internal operations for support and admin users
 
+## Open Source Ecosystem
+
+| Repository | Role in the ecosystem | Use it when |
+| --- | --- | --- |
+| [`genxapi`](https://github.com/genxapi/genxapi) | Core generator product and CLI for contract-driven SDK package generation | You want to generate SDKs locally, in custom CI, or through your own workflow orchestration |
+| [`genxapi-action`](https://github.com/genxapi/genxapi-action) | Official GitHub Actions adoption path for GenX API | Your team wants the GitHub-native wrapper around the GenX API CLI |
+| [`genxapi-ecosystem-demo`](https://github.com/genxapi/genxapi-ecosystem-demo) | End-to-end proof of contract publication, SDK generation, and multi-consumer adoption | You want to understand the full ecosystem story or run a conference-ready technical demo |
+
+This repository is the proof repo. It intentionally shows the lifecycle that the core product and the GitHub Action support elsewhere, without putting demo packages in the core `@genxapi/*` namespace.
+
 ## What This Repository Demonstrates
 
 - `auth-service`, `users-service`, and `payments-service` own their contracts and publish versioned snapshots under `docs/contracts/`
 - GenX API reads those published snapshots through `genxapi.users.config.json` and `genxapi.config.json`
 - `sdk/users-sdk` and `sdk/payments-sdk` are generated packages, not handwritten app clients
 - the customer apps and the backoffice app all adopt those SDKs explicitly
+- demo-local packages use the separate `@genxapi-labs/*` scope so they do not pollute the core `@genxapi/*` package surface
 - JWT claims decide which app flows are valid for each persona
 
 ## Ecosystem Flow
@@ -55,7 +66,7 @@ flowchart LR
 | `genxapi.config.json` | GenX API config for the payments SDK, pointed at the published payments contract |
 | `sdk/users-sdk` | Generated users SDK package consumed by apps |
 | `sdk/payments-sdk` | Generated payments SDK package consumed by apps |
-| `libs/auth-client` | Shared auth-service client helpers and session types |
+| `libs/auth-client` | Shared auth-service session helpers and types |
 | `apps/web-app` | Customer self-service browser app using `/me` and `/me/payments` |
 | `apps/mobile-app` | Second customer consumer using the same role-aware customer scope in Expo |
 | `apps/backoffice-app` | Internal support/admin app using `/users`, `/users/:id`, and admin-only `/payments` |
@@ -150,6 +161,7 @@ If you are testing on a physical device, replace `127.0.0.1` with your machine's
    Show the Swagger UIs for `auth-service`, `users-service`, and `payments-service`, then point to `docs/contracts/<service>/latest.json` as the published contract snapshot.
 2. Show the GenX API handoff.
    Open `genxapi.users.config.json` and `genxapi.config.json`, then point to `sdk/users-sdk` and `sdk/payments-sdk` as the generated downstream packages.
+   If you want the GitHub-native adoption path after the local demo, point to [`genxapi-action`](https://github.com/genxapi/genxapi-action).
 3. Show customer self-service in `web-app`.
    Use Bob Smith first because his account shows both normal payment history and a refund. Switch to Ethan Williams if you want a simpler customer example.
 4. Show internal operations in `backoffice-app`.

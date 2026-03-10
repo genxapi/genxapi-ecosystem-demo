@@ -7,6 +7,7 @@ import MyPaymentsScreen from './src/screens/MyPaymentsScreen';
 import MyProfileScreen from './src/screens/MyProfileScreen';
 import SessionGateScreen from './src/screens/SessionGateScreen';
 import { queryClient } from './src/query-client';
+import { cardShadow, theme } from './src/theme';
 
 type AppScreen = 'profile' | 'payments';
 
@@ -30,11 +31,11 @@ function MobileCustomerShell() {
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.heroCard}>
-          <Text style={styles.eyebrow}>genxapi ecosystem</Text>
-          <Text style={styles.title}>Customer Self-Service Mobile Demo</Text>
+          <Text style={styles.eyebrow}>GenX API Customer Surface</Text>
+          <Text style={styles.title}>Customer Mobile</Text>
           <Text style={styles.subtitle}>
-            `mobile-app` now acts as the second customer consumer, reusing the same runtime-configured
-            generated SDK boundary as `web-app`.
+            Second customer consumer reusing the same runtime-configured SDK packages and published
+            contract workflow as the web portal.
           </Text>
         </View>
 
@@ -108,44 +109,48 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5efe6',
+    backgroundColor: theme.colors.background,
   },
   content: {
     paddingHorizontal: 20,
     paddingVertical: 18,
-    gap: 16,
+    gap: 18,
   },
   heroCard: {
-    borderRadius: 28,
-    padding: 24,
-    backgroundColor: '#123524',
+    borderRadius: theme.radius.xl,
+    padding: theme.spacing.xl,
+    borderWidth: 1,
+    borderColor: 'rgba(95, 169, 255, 0.4)',
+    backgroundColor: theme.colors.navy,
+    ...cardShadow,
   },
   eyebrow: {
-    color: '#d4f2d2',
+    color: theme.colors.primarySoft,
     fontSize: 11,
     fontWeight: '700',
-    letterSpacing: 1.6,
+    letterSpacing: 1.7,
     marginBottom: 12,
     textTransform: 'uppercase',
   },
   title: {
-    color: '#f8fbf6',
+    color: theme.colors.surface,
     fontSize: 30,
     fontWeight: '800',
     lineHeight: 36,
   },
   subtitle: {
-    color: '#c3ddc9',
+    color: '#d6e0fb',
     fontSize: 15,
     lineHeight: 22,
     marginTop: 12,
   },
   sessionCard: {
-    backgroundColor: '#fffaf3',
-    borderColor: '#d9d2c3',
-    borderRadius: 24,
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.lg,
     borderWidth: 1,
-    padding: 20,
+    padding: theme.spacing.lg,
+    ...cardShadow,
   },
   sessionHeader: {
     gap: 16,
@@ -154,19 +159,19 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   sectionEyebrow: {
-    color: '#7b6b4f',
+    color: theme.colors.primary,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
   sessionTitle: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 20,
     fontWeight: '700',
   },
   sessionSubtitle: {
-    color: '#5d665f',
+    color: theme.colors.muted,
     fontSize: 14,
     lineHeight: 20,
   },
@@ -175,53 +180,60 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   customerBadge: {
-    backgroundColor: '#d9f3d7',
+    backgroundColor: theme.colors.surfaceSoft,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   customerBadgeText: {
-    color: '#245b30',
+    color: theme.colors.primary,
     fontSize: 12,
     fontWeight: '700',
   },
   sessionEmail: {
-    color: '#405046',
+    color: theme.colors.muted,
     fontSize: 14,
   },
   secondaryButton: {
-    backgroundColor: '#eff1eb',
+    backgroundColor: theme.colors.surfaceSoft,
+    borderColor: theme.colors.border,
     borderRadius: 999,
+    borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   secondaryButtonText: {
-    color: '#233127',
+    color: theme.colors.navy,
     fontSize: 14,
     fontWeight: '700',
   },
   tabBar: {
-    backgroundColor: '#e4ddcf',
-    borderRadius: 20,
+    backgroundColor: theme.colors.surfaceSoft,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
     flexDirection: 'row',
     padding: 4,
   },
   tabButton: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 18,
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 14,
   },
   tabButtonActive: {
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.borderStrong,
+    ...cardShadow,
   },
   tabButtonText: {
-    color: '#675a45',
+    color: theme.colors.muted,
     fontSize: 14,
     fontWeight: '700',
   },
   tabButtonTextActive: {
-    color: '#133923',
+    color: theme.colors.primary,
   },
 });

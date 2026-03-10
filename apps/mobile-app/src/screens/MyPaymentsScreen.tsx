@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { type CustomerPayment, useCustomerMobileApi } from '../api/sdk';
 import { useAuthSession } from '../auth/AuthSessionContext';
+import { cardShadow, theme } from '../theme';
 import {
   formatCurrency,
   formatDateTime,
@@ -59,14 +60,14 @@ export default function MyPaymentsScreen() {
         <Text style={styles.eyebrow}>My Payments</Text>
         <Text style={styles.title}>Your payment history</Text>
         <Text style={styles.description}>
-          This screen uses the generated payments SDK against /me/payments, so every record shown
-          belongs to the authenticated customer.
+          This screen uses the generated payments SDK package against /me/payments, so every record
+          shown belongs to the authenticated customer.
         </Text>
       </View>
 
       {paymentsQuery.isLoading ? (
         <View style={styles.card}>
-          <ActivityIndicator color="#123524" />
+          <ActivityIndicator color={theme.colors.primary} />
           <Text style={styles.stateText}>Loading your payments...</Text>
         </View>
       ) : null}
@@ -166,14 +167,15 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   heroCard: {
-    backgroundColor: '#edf6f7',
-    borderColor: '#c6d9de',
-    borderRadius: 24,
+    backgroundColor: theme.colors.surfaceSoft,
+    borderColor: theme.colors.borderStrong,
+    borderRadius: theme.radius.lg,
     borderWidth: 1,
-    padding: 20,
+    padding: theme.spacing.lg,
+    ...cardShadow,
   },
   eyebrow: {
-    color: '#2a6d7d',
+    color: theme.colors.primary,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
@@ -181,44 +183,47 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   title: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 24,
     fontWeight: '700',
   },
   description: {
-    color: '#5d665f',
+    color: theme.colors.muted,
     fontSize: 15,
     lineHeight: 22,
     marginTop: 10,
   },
   card: {
-    backgroundColor: '#fffaf3',
-    borderColor: '#d9d2c3',
-    borderRadius: 24,
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.lg,
     borderWidth: 1,
     gap: 14,
-    padding: 20,
+    padding: theme.spacing.lg,
+    ...cardShadow,
   },
   stateText: {
-    color: '#405046',
+    color: theme.colors.muted,
     fontSize: 15,
     lineHeight: 22,
   },
   errorText: {
-    color: '#a11d1d',
+    color: theme.colors.danger,
     fontSize: 14,
     lineHeight: 20,
   },
   secondaryButton: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: '#eff1eb',
-    borderRadius: 18,
+    backgroundColor: theme.colors.surfaceSoft,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   secondaryButtonText: {
-    color: '#233127',
+    color: theme.colors.navy,
     fontSize: 14,
     fontWeight: '700',
   },
@@ -226,14 +231,15 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   summaryCard: {
-    backgroundColor: '#fffaf3',
-    borderColor: '#d9d2c3',
-    borderRadius: 24,
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.lg,
     borderWidth: 1,
     padding: 18,
+    ...cardShadow,
   },
   summaryLabel: {
-    color: '#7b6b4f',
+    color: theme.colors.primary,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
@@ -241,23 +247,23 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   summaryValue: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 22,
     fontWeight: '700',
   },
   summaryDescription: {
-    color: '#5d665f',
+    color: theme.colors.muted,
     fontSize: 14,
     lineHeight: 20,
     marginTop: 8,
   },
   cardTitle: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 20,
     fontWeight: '700',
   },
   cardDescription: {
-    color: '#5d665f',
+    color: theme.colors.muted,
     fontSize: 14,
     lineHeight: 20,
   },
@@ -265,7 +271,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   paymentCard: {
-    backgroundColor: '#f6f0e4',
+    backgroundColor: theme.colors.surfaceSoft,
     borderRadius: 20,
     gap: 12,
     padding: 16,
@@ -276,12 +282,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   amountText: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 20,
     fontWeight: '700',
   },
   dateText: {
-    color: '#5d665f',
+    color: theme.colors.muted,
     fontSize: 13,
     marginTop: 6,
   },
@@ -291,45 +297,45 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   statusBadgeCompleted: {
-    backgroundColor: '#d9f3d7',
+    backgroundColor: theme.colors.successSurface,
   },
   statusBadgePending: {
-    backgroundColor: '#feefc3',
+    backgroundColor: theme.colors.warningSurface,
   },
   statusBadgeRefunded: {
-    backgroundColor: '#ecdfff',
+    backgroundColor: theme.colors.refundedSurface,
   },
   statusBadgeFailed: {
-    backgroundColor: '#fde2df',
+    backgroundColor: theme.colors.dangerSurface,
   },
   statusBadgeText: {
     fontSize: 12,
     fontWeight: '700',
   },
   statusBadgeTextCompleted: {
-    color: '#245b30',
+    color: theme.colors.success,
   },
   statusBadgeTextPending: {
-    color: '#8a5a00',
+    color: theme.colors.warning,
   },
   statusBadgeTextRefunded: {
-    color: '#5c2ca6',
+    color: theme.colors.refunded,
   },
   statusBadgeTextFailed: {
-    color: '#9e1c1c',
+    color: theme.colors.danger,
   },
   metaRow: {
     gap: 4,
   },
   metaLabel: {
-    color: '#7b6b4f',
+    color: theme.colors.primary,
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
   metaValue: {
-    color: '#1d2a22',
+    color: theme.colors.navy,
     fontSize: 15,
     lineHeight: 20,
   },

@@ -1,5 +1,5 @@
-import { users } from '@genxapi/ecosystem-users-sdk';
-import { payments } from 'genxapi-ecosystem-payments-sdk';
+import { users } from '@genxapi-labs/ecosystem-users-sdk';
+import { payments } from '@genxapi-labs/ecosystem-payments-sdk';
 import { getCurrentAuthAccessToken } from '../auth/auth-session';
 import { createBackofficeSdks } from '../runtime';
 

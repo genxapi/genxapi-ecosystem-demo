@@ -1,5 +1,5 @@
 {
-  "name": "@genxapi/ecosystem-users-sdk",
+  "name": "@genxapi-labs/ecosystem-users-sdk",
   "version": "0.1.0",
   "description": "Generated users SDK for the GenX API ecosystem demo",
   "type": "module",

@@ -1,7 +1,7 @@
 {
-  "name": "@genxapi/ecosystem-auth-client",
+  "name": "@genxapi-labs/ecosystem-auth-client",
   "version": "0.1.0",
-  "description": "Shared auth-service client helpers for the GenX API ecosystem demo",
+  "description": "Shared auth-service session helpers for the GenX API ecosystem demo",
   "private": true,
   "main": "index.js",
   "types": "index.d.ts"

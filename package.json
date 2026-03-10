@@ -1,6 +1,6 @@
 {
   "name": "genxapi-ecosystem-demo",
-  "description": "Role-aware GenX API ecosystem demo for service-owned contracts, generated SDKs, and multi-app adoption.",
+  "description": "End-to-end GenX API ecosystem demo for contract publication, SDK generation, and multi-consumer adoption.",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -27,15 +27,15 @@
     "graph": "nx graph"
   },
   "dependencies": {
-    "@genxapi/ecosystem-auth-client": "file:libs/auth-client",
-    "@genxapi/ecosystem-users-sdk": "file:sdk/users-sdk",
+    "@genxapi-labs/ecosystem-auth-client": "file:libs/auth-client",
+    "@genxapi-labs/ecosystem-users-sdk": "file:sdk/users-sdk",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.0.0",
     "@tanstack/react-query": "^5.65.1",
     "@tanstack/react-query-devtools": "^5.65.1",
-    "genxapi-ecosystem-payments-sdk": "file:sdk/payments-sdk",
+    "@genxapi-labs/ecosystem-payments-sdk": "file:sdk/payments-sdk",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
