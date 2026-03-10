@@ -1,7 +1,7 @@
 {
   "name": "genxapi-ecosystem-payments-sdk",
   "version": "0.1.0",
-  "description": "Generated API client project",
+  "description": "Generated payments SDK for the GenX API ecosystem demo",
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "generate-clients": "orval --config orval.config.ts",
-    "build": "rimraf dist && npm run generate-clients && rollup -c",
+    "build": "rimraf dist && npm run generate-clients && node ../../tools/sdk/run-rollup-build.mjs",
     "test": "vitest run",
     "npm-publish": "npm run publish:npm",
     "publish:npm": "npm publish",

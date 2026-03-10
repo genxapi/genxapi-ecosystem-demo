@@ -9,7 +9,7 @@ export default function SessionGatePage() {
     isAuthenticated && !isCustomer ? 'Switch to a customer demo persona' : 'Choose a customer demo session';
   const description =
     isAuthenticated && !isCustomer
-      ? 'This web app is now intentionally scoped to customer self-service. Support and admin journeys move to the backoffice app in the next phase.'
+      ? 'This web app is intentionally scoped to customer self-service. Support and admin journeys now live in the backoffice app.'
       : 'Each persona button signs into auth-service with a seeded customer account, then the app loads /me and /me/payments through the generated SDK layer.';
 
   return (

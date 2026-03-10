@@ -1,140 +1,57 @@
 # Current Stage Guide
 
-This document explains the repository as it exists after the architecture boundary correction.
+This repository now demonstrates the full role-aware GenX API ecosystem story inside one Nx workspace:
 
-## Purpose
+1. backend services own and publish contracts
+2. GenX API generates SDKs from those published contracts
+3. multiple consumers adopt the SDKs
+4. JWT role claims control which journeys are valid in each app
 
-The repo is meant to show how GenX API fits into a realistic backend-team workflow, not how GenX API can take over that workflow.
+## What Is In Scope Now
 
-The intended sequence is:
+- service-owned Swagger generation and `publish-contract` targets
+- published contract snapshots under `docs/contracts/`
+- GenX API configs pointed at those published snapshots
+- generated SDK packages under `sdk/`
+- `web-app` as customer self-service in the browser
+- `mobile-app` as the second customer self-service consumer
+- `backoffice-app` as the internal support and admin consumer
+- shared auth helpers in `libs/auth-client`
 
-1. backend team develops and releases a NestJS service
-2. the service exposes Swagger/OpenAPI as part of its normal lifecycle
-3. the service publishes a versioned contract artefact
-4. GenX API generates an SDK from that published contract
-5. the SDK package is versioned and released independently
-6. consumer applications adopt the SDK explicitly
+## Boundary Rules
 
-## What Is Preserved
+- backend service version owns OpenAPI `info.version`
+- published contract version stays aligned with the backend service version
+- SDK package versioning stays independent from the service and contract version
+- consumer apps adopt SDK packages explicitly and do not regenerate them during app startup
+- apps own runtime base URLs, session storage, and bearer-token injection
 
-- normal NestJS Swagger UI and JSON endpoints
-- Nx targets for serving, building, and exporting service Swagger
-- GenX API-driven SDK generation
-- SDK packages under `sdk/`
-- a separate auth boundary instead of polluting domain services with login logic
-- consumer imports through package names
-
-## What Changed
-
-### Backend lifecycle is independent
-
-The services now read Swagger version metadata from their own `package.json` versions, with optional `API_VERSION` override support in CI.
-
-That means:
-
-- backend version ownership stays with the service
-- OpenAPI `info.version` tracks backend service version
-- GenX API does not own backend versioning
-
-### Contract publication is explicit
-
-Each service has a `publish-contract` target that turns exported Swagger into published contract artefacts:
-
-- `docs/contracts/auth-service/<version>.json`
-- `docs/contracts/auth-service/latest.json`
-- `docs/contracts/users-service/<version>.json`
-- `docs/contracts/users-service/latest.json`
-- `docs/contracts/payments-service/<version>.json`
-- `docs/contracts/payments-service/latest.json`
-
-These files represent the demo contract registry.
-
-In the intended lifecycle, `publish-contract` belongs in the backend service release pipeline. Running it manually in this repository is only a local stand-in for that release step.
-
-### GenX API starts after publication
-
-The GenX API configs now consume only published contracts.
-
-They do not:
-
-- call service export steps
-- depend on live services
-- own contract publication
-
-SDK generation can therefore run with the services offline, as long as the published contract snapshots already exist.
-
-For local development, the workspace configs point to `latest.json`.
-
-For CI and publishing, the workflow first resolves `latest.json` to the matching immutable `docs/contracts/<service>/<version>.json` file and generates from that pinned snapshot.
-
-### SDK release is separate from service release
-
-The SDK package version is no longer forced to match the backend service or OpenAPI contract version.
-
-The backend service version still aligns with the OpenAPI contract version.
-
-The SDK package version is now an SDK release concern handled independently in the SDK workflow.
-
-That workflow does not change the backend service version or the published contract version.
-
-### Consumer adoption is explicit
-
-`web-app` no longer regenerates SDKs during `serve` or `build`.
-
-It consumes the SDK packages through normal package exports, which means:
-
-- package boundaries are respected
-- the consumer does not secretly own SDK generation
-- the demo looks closer to real downstream adoption
-
-## Practical Flow
-
-For a local run:
+## Recommended Local Flow
 
 ```bash
 npm install
-nx run auth-service:publish-contract
-nx run users-service:publish-contract
-nx run payments-service:publish-contract
-nx run users-sdk:build
-nx run payments-sdk:build
-npm run serve:demo
+npm run demo:prepare
+npm run demo:serve
 ```
 
-For validating the consumer only:
+Optional mobile demo:
 
 ```bash
-nx build web-app
+cp apps/mobile-app/.env.example apps/mobile-app/.env
+npm run demo:serve:mobile
 ```
 
-This succeeds only after the SDK packages have been built, which is intentional.
+Use the root README for the full live-demo runbook, persona guidance, and app-by-app walkthrough.
 
-## What The Demo Is Showing
+## Why The Boundary Matters
 
-The important message is not "GenX API runs before every consumer build".
+The important message is not "GenX API runs before every app build."
 
 The important message is:
 
-- backend teams can keep their existing release ownership
-- published contracts become stable inputs
-- GenX API can generate SDKs from those stable inputs
-- SDK release and consumer adoption remain normal downstream lifecycle concerns
+- services keep contract ownership
+- published contracts become stable downstream inputs
+- GenX API generates SDKs from those inputs
+- consumer adoption remains a normal downstream lifecycle decision
 
-## Runtime Convention
-
-The consumer-side auth and runtime contract is now explicit:
-
-- consumers authenticate against `auth-service`
-- each app owns its session storage and base URLs
-- SDK packages expose small factories that bind the app token provider once
-
-`libs/auth-client` now provides the shared login client shape and session types without exposing seeded demo accounts in frontend code.
-
-## Future Nx Release Direction
-
-If this repo adopts Nx Release later, the safe migration path is:
-
-- one release group for backend services
-- one release group for SDK packages
-
-That keeps service version -> contract version aligned while leaving SDK package versioning independent.
+That is the architecture this repository is designed to rehearse.

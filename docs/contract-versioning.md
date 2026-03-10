@@ -27,11 +27,11 @@ That means the published contract artefact reflects the backend release version 
 
 Example:
 
-- `apps/users-service/package.json` version: `0.2.0`
-- published contract: `docs/contracts/users-service/0.2.0.json`
-- `docs/contracts/users-service/latest.json` also reports `info.version = 0.2.0`
+- `apps/users-service/package.json` version: `0.4.0`
+- published contract: `docs/contracts/users-service/0.4.0.json`
+- `docs/contracts/users-service/latest.json` also reports `info.version = 0.4.0`
 
-`latest.json` is an alias for convenience. The reproducible CI path should resolve it to the immutable versioned snapshot and generate from `docs/contracts/users-service/0.2.0.json`.
+`latest.json` is an alias for convenience. The reproducible CI path should resolve it to the immutable versioned snapshot and generate from `docs/contracts/users-service/0.4.0.json`.
 
 ## Contract Version != SDK Package Version
 
@@ -39,13 +39,13 @@ The SDK package version is intentionally not synced to the contract version.
 
 That means a users SDK release could look like:
 
-- backend service version: `0.2.0`
-- contract version: `0.2.0`
+- backend service version: `0.4.0`
+- contract version: `0.4.0`
 - SDK package version: `0.5.0`
 
 This is valid because the SDK package is its own released product.
 
-The SDK can still be generated from a contract that reports `0.2.0`, but the package released to consumers follows SDK release ownership.
+The SDK can still be generated from a contract that reports `0.4.0`, but the package released to consumers follows SDK release ownership.
 
 ## Why This Matters
 
@@ -60,25 +60,26 @@ This boundary keeps responsibilities realistic:
 
 ## Local Demo Flow
 
-To see the contract side:
+To show the service-owned contract side:
 
 ```bash
-nx run users-service:publish-contract
+npm run demo:contracts
 ```
 
-In the demo, this command stands in for a backend release pipeline step.
+In the demo, this stands in for the backend release pipeline step that publishes versioned contract artefacts.
 
-To see the SDK side:
+To show the SDK side:
 
 ```bash
-nx run users-sdk:generate
-nx run users-sdk:build
+npm run demo:sdks
 ```
 
-To see consumer adoption:
+To show browser consumer adoption:
 
 ```bash
-nx build web-app
+npm run build:browser-apps
 ```
 
-The consumer build depends on the built SDK package being present, but it does not trigger SDK generation automatically.
+Those app builds depend on the built SDK packages being present, but they do not trigger contract publication or SDK generation automatically.
+
+`mobile-app` follows the same boundary, but it is served through Expo with explicit `EXPO_PUBLIC_*` service URLs instead of the Vite proxy setup used by the browser apps.
