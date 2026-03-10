@@ -4,7 +4,12 @@ import { DocumentBuilder } from '@nestjs/swagger';
 
 const SERVICE_NAME = 'users-service';
 const SWAGGER_TITLE = 'Users Service';
-const SWAGGER_DESCRIPTION = 'Users service API for the genxapi ecosystem demo';
+const SWAGGER_DESCRIPTION = [
+  'Users service API for the genxapi ecosystem demo.',
+  'Protected routes use a demo HS256 bearer JWT.',
+  'customer can read only /me.',
+  'support and admin can read the internal /users routes.',
+].join(' ');
 
 const resolveServicePackageVersion = (): string => {
   if (process.env.API_VERSION) {
@@ -45,6 +50,6 @@ export const buildUsersServiceSwaggerConfig = () =>
       scheme: 'bearer',
       bearerFormat: 'JWT',
       description:
-        'Demo HS256 bearer token. Required claims: sub (user id), role, email, name, iss, aud.',
+        'Demo HS256 bearer token. Required claims: sub (numeric user id), role (customer|support|admin), email, name, iss, aud.',
     })
     .build();

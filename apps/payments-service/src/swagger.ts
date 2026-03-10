@@ -4,7 +4,12 @@ import { DocumentBuilder } from '@nestjs/swagger';
 
 const SERVICE_NAME = 'payments-service';
 const SWAGGER_TITLE = 'Payments Service';
-const SWAGGER_DESCRIPTION = 'Payments service API for the genxapi ecosystem demo';
+const SWAGGER_DESCRIPTION = [
+  'Payments service API for the genxapi ecosystem demo.',
+  'Protected routes use a demo HS256 bearer JWT.',
+  'customer can read only /me/payments.',
+  'support and admin can read internal /payments routes and user payment lookups.',
+].join(' ');
 
 const resolveServicePackageVersion = (): string => {
   if (process.env.API_VERSION) {
@@ -45,6 +50,6 @@ export const buildPaymentsServiceSwaggerConfig = () =>
       scheme: 'bearer',
       bearerFormat: 'JWT',
       description:
-        'Demo HS256 bearer token. Required claims: sub (user id), role, email, name, iss, aud.',
+        'Demo HS256 bearer token. Required claims: sub (numeric user id), role (customer|support|admin), email, name, iss, aud.',
     })
     .build();
