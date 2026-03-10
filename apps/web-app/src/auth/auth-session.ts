@@ -1,6 +1,5 @@
 import {
   AUTH_SESSION_STORAGE_KEY,
-  isInternalRole,
   type AuthSession,
 } from '@genxapi/ecosystem-auth-client';
 
@@ -9,7 +8,7 @@ export interface AuthSessionState {
   user: AuthSession['user'] | null;
   accessToken: string | null;
   isAuthenticated: boolean;
-  isInternalViewer: boolean;
+  isCustomer: boolean;
 }
 
 const canUseStorage = () => typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
@@ -38,7 +37,7 @@ export const toAuthSessionState = (session: AuthSession | null): AuthSessionStat
   user: session?.user ?? null,
   accessToken: session?.accessToken ?? null,
   isAuthenticated: session !== null,
-  isInternalViewer: isInternalRole(session?.user.role),
+  isCustomer: session?.user.role === 'customer',
 });
 
 export const loadStoredAuthSession = (): AuthSession | null => {
