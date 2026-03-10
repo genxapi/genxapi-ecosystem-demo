@@ -25,7 +25,7 @@
       "swagger": "./docs/contracts/payments-service/latest.json",
       "copySwagger": false,
       "config": {
-        "baseUrl": "http://localhost:3002"
+        "baseUrl": ""
       }
     }
   ]

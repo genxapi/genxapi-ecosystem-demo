@@ -9,7 +9,7 @@ This repository demonstrates the intended GenX API adoption model inside an Nx m
 5. GenX API generates an SDK package
 6. consumer apps adopt the SDK package explicitly
 
-At the current stage, `web-app` is the only consumer integrated with the generated SDK packages.
+At the current stage, `web-app` is the only consumer making live authenticated SDK calls. `backoffice-app` and `mobile-app` expose the same auth-service and SDK bootstrap shape but still stop short of full UI flows.
 
 ## Ownership Boundary
 
@@ -34,16 +34,27 @@ GenX API starts only after the contract has already been published.
 - `apps/payments-service`
   - NestJS service on port `3002`
   - owns Swagger generation and contract publication
+- `apps/auth-service`
+  - NestJS service on port `3003`
+  - owns login, JWT issuance, and contract publication
 - `docs/contracts/users-service`
   - published users-service contract artefacts
 - `docs/contracts/payments-service`
   - published payments-service contract artefacts
+- `docs/contracts/auth-service`
+  - published auth-service contract artefacts
 - `sdk/users-sdk`
   - generated from the published users-service contract
 - `sdk/payments-sdk`
   - generated from the published payments-service contract
+- `libs/auth-client`
+  - shared auth-service client helpers and session types for consumers
 - `apps/web-app`
   - consumer app that imports SDK packages through normal package boundaries
+- `apps/backoffice-app`
+  - internal consumer stub showing the auth-service and SDK bootstrap shape
+- `apps/mobile-app`
+  - mobile consumer stub showing the auth-service and SDK bootstrap shape
 
 ## Backend Contract Lifecycle
 
@@ -57,6 +68,7 @@ The services keep normal NestJS Swagger behavior:
 
 Published contracts are created with dedicated service-owned targets:
 
+- `nx run auth-service:publish-contract`
 - `nx run users-service:publish-contract`
 - `nx run payments-service:publish-contract`
 
@@ -91,6 +103,7 @@ npm install
 Publish the current service contracts:
 
 ```bash
+nx run auth-service:publish-contract
 nx run users-service:publish-contract
 nx run payments-service:publish-contract
 ```
@@ -113,14 +126,24 @@ npm run serve:demo
 Open:
 
 - Web app: `http://localhost:4200`
+- Auth Swagger UI: `http://localhost:3003/swagger`
 - Users Swagger UI: `http://localhost:3001/swagger`
 - Payments Swagger UI: `http://localhost:3002/swagger`
+
+## Demo Credentials
+
+Use the seeded auth-service accounts to log into `web-app`:
+
+- Customer: `bob.smith@example.com` / `bob-demo-password`
+- Support: `diana.miller@example.com` / `diana-demo-password`
+- Admin: `alice.johnson@example.com` / `alice-demo-password`
 
 ## Useful Commands
 
 Export service Swagger locally:
 
 ```bash
+nx run auth-service:export-swagger
 nx run users-service:export-swagger
 nx run payments-service:export-swagger
 ```
@@ -128,6 +151,7 @@ nx run payments-service:export-swagger
 Publish service-owned contracts:
 
 ```bash
+nx run auth-service:publish-contract
 nx run users-service:publish-contract
 nx run payments-service:publish-contract
 ```
@@ -166,29 +190,31 @@ Integrated now:
 
 - service-owned Swagger generation
 - service-owned contract publication
+- auth-service login and JWT issuance
 - GenX API generation from published contracts
 - independently releasable SDK packages
 - explicit package consumption in `web-app`
+- app-owned session storage in `web-app`
+- shared auth-service client helpers under `libs/auth-client`
 
 Not yet integrated:
 
-- `backoffice-app` consuming SDK packages
-- `mobile-app` consuming SDK packages
+- `backoffice-app` login flow
+- `backoffice-app` making live SDK requests
+- `mobile-app` login flow
+- `mobile-app` making live SDK requests
 - a backend release automation tool such as semantic-release or Nx Release
 
 If this repository migrates to Nx Release later, keep services and SDK packages in separate release groups so backend service versioning and SDK package versioning remain independent.
 
-## Temporary Template Workaround
+## Runtime Adoption
 
-`tools/sdk/normalize-generated-sdk.mjs` exists only to patch a current GenX API template build mismatch between generated declaration output and the Rollup DTS input path.
+The repo now keeps one shared consumer-side convention for auth and SDK wiring:
 
-Its scope is intentionally narrow:
-
-- enable declarations in `tsconfig.build.json`
-- point declaration output to `dist/types`
-- correct the Rollup DTS input path
-
-It does not own contract publication, versioning, or SDK release decisions. Remove it once the upstream template emits a build-ready SDK package by default.
+- consumers authenticate against `auth-service`
+- each app keeps its own session storage and backend URLs
+- SDK packages are created once with a bearer token provider from that session
+- shared auth request helpers live in `libs/auth-client`
 
 ## More Detail
 

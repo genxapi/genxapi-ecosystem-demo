@@ -21,6 +21,7 @@ The intended sequence is:
 - Nx targets for serving, building, and exporting service Swagger
 - GenX API-driven SDK generation
 - SDK packages under `sdk/`
+- a separate auth boundary instead of polluting domain services with login logic
 - consumer imports through package names
 
 ## What Changed
@@ -39,6 +40,8 @@ That means:
 
 Each service has a `publish-contract` target that turns exported Swagger into published contract artefacts:
 
+- `docs/contracts/auth-service/<version>.json`
+- `docs/contracts/auth-service/latest.json`
 - `docs/contracts/users-service/<version>.json`
 - `docs/contracts/users-service/latest.json`
 - `docs/contracts/payments-service/<version>.json`
@@ -90,6 +93,7 @@ For a local run:
 
 ```bash
 npm install
+nx run auth-service:publish-contract
 nx run users-service:publish-contract
 nx run payments-service:publish-contract
 nx run users-sdk:build
@@ -116,11 +120,15 @@ The important message is:
 - GenX API can generate SDKs from those stable inputs
 - SDK release and consumer adoption remain normal downstream lifecycle concerns
 
-## Temporary Technical Debt
+## Runtime Convention
 
-`tools/sdk/normalize-generated-sdk.mjs` is a temporary patch for a template-level build mismatch.
+The consumer-side auth and runtime contract is now explicit:
 
-It is intentionally limited to the generated SDK build files and exists only so the generated packages can emit a correct `dist/index.js` and `dist/index.d.ts` pair until the upstream template is fixed.
+- consumers authenticate against `auth-service`
+- each app owns its session storage and base URLs
+- SDK packages expose small factories that bind the app token provider once
+
+`libs/auth-client` now provides the shared login client shape and session types without exposing seeded demo accounts in frontend code.
 
 ## Future Nx Release Direction
 

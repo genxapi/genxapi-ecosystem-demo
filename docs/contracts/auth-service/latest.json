@@ -1,0 +1,189 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "summary": "Auth service health check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "summary": "Authenticate a user and issue a bearer token",
+        "description": "Accepts seeded demo credentials and returns a JWT compatible with the secured users and payments contracts.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated session details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credentials are invalid or the account is inactive."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Auth Service",
+    "description": "Authentication service API for the genxapi ecosystem demo. Issues demo HS256 bearer JWTs that are accepted by users-service and payments-service. Consumers log in here and then configure the generated SDKs with the returned token.",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "HealthCheckResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok",
+            "description": "Service status",
+            "enum": [
+              "ok"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "example": "auth-service",
+            "description": "Service name",
+            "enum": [
+              "auth-service"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "service"
+        ]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "diana.miller@example.com",
+            "description": "Demo account email."
+          },
+          "password": {
+            "type": "string",
+            "example": "diana-demo-password",
+            "description": "Demo account password."
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 4,
+            "description": "Authenticated user id."
+          },
+          "email": {
+            "type": "string",
+            "example": "diana.miller@example.com",
+            "description": "Authenticated user email address."
+          },
+          "name": {
+            "type": "string",
+            "example": "Diana Miller",
+            "description": "Authenticated user display name."
+          },
+          "role": {
+            "type": "string",
+            "example": "support",
+            "enum": [
+              "customer",
+              "support",
+              "admin"
+            ],
+            "description": "Authenticated user role."
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "role"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0Iiwicm9sZSI6InN1cHBvcnQiLCJlbWFpbCI6ImRpYW5hLm1pbGxlckBleGFtcGxlLmNvbSIsIm5hbWUiOiJEaWFuYSBNaWx",
+            "description": "Signed bearer token."
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer",
+            "enum": [
+              "Bearer"
+            ],
+            "description": "HTTP authorization token type."
+          },
+          "expiresIn": {
+            "type": "number",
+            "example": 3600,
+            "description": "Access token lifetime in seconds."
+          },
+          "user": {
+            "description": "Authenticated user metadata.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthUser"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "tokenType",
+          "expiresIn",
+          "user"
+        ]
+      }
+    }
+  }
+}

@@ -60,7 +60,6 @@ jobs:
         with:
           config: genxapi.users.config.json
           contractPath: ${{ steps.contract.outputs.contract_path }}
-          sdkDirectory: sdk/users-sdk
       - name: Build SDK package
         working-directory: sdk/users-sdk
         run: npm run build
@@ -102,7 +101,6 @@ jobs:
         with:
           config: genxapi.users.config.json
           contractPath: ${{ steps.contract.outputs.contract_path }}
-          sdkDirectory: sdk/users-sdk
       - name: Build SDK package
         working-directory: sdk/users-sdk
         run: npm run build

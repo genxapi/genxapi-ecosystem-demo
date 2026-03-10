@@ -7,9 +7,6 @@ inputs:
   contractPath:
     description: Optional pinned published contract snapshot to consume in CI
     required: false
-  sdkDirectory:
-    description: SDK directory to patch after generation for the current template build gap
-    required: true
   logLevel:
     description: GenXAPI log level
     required: false
@@ -31,6 +28,3 @@ runs:
       shell: bash
       env:
         NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-    - name: Patch temporary template build gap
-      run: node tools/sdk/normalize-generated-sdk.mjs ${{ inputs.sdkDirectory }}
-      shell: bash

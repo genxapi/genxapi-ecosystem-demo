@@ -20,14 +20,15 @@
         }
       }
     },
-    "/payments": {
+    "/me/payments": {
       "get": {
-        "operationId": "PaymentsController_getPayments",
-        "summary": "Return a list of all payments",
+        "operationId": "PaymentsController_getMyPayments",
+        "summary": "Return the authenticated user payments",
+        "description": "Customer self-service route. The service resolves ownership from the JWT sub claim instead of trusting caller-supplied user ids.",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Payments owned by the authenticated subject.",
             "content": {
               "application/json": {
                 "schema": {
@@ -38,20 +39,117 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
           }
-        }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
-    "/payments/{id}": {
+    "/payments": {
       "get": {
-        "operationId": "PaymentsController_getUserPayments",
-        "summary": "Return all payments done by a specific user",
+        "operationId": "PaymentsController_getPayments",
+        "summary": "Return the internal payments list",
+        "description": "Read-only internal route for support and admin personas.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Internal payments list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Payment"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Requires support or admin role."
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/payments/{paymentId}": {
+      "get": {
+        "operationId": "PaymentsController_getPayment",
+        "summary": "Return an internal payment by paymentId",
+        "description": "Read-only internal route for support and admin personas. The route identifies a payment resource by paymentId; it is not a user-payment shortcut.",
         "parameters": [
           {
-            "name": "id",
+            "name": "paymentId",
             "required": true,
             "in": "path",
-            "description": "User ID of payments to retrieve",
+            "description": "Payment ID to retrieve",
+            "schema": {
+              "example": 1001,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Requested payment resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Requires support or admin role."
+          },
+          "404": {
+            "description": "Payment was not found."
+          }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/payments": {
+      "get": {
+        "operationId": "PaymentsController_getUserPayments",
+        "summary": "Return internal payments for a specific userId",
+        "description": "Read-only internal convenience route for support and admin personas. It filters payment resources by owning userId.",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "User ID to filter payments by",
             "schema": {
               "example": 1,
               "type": "number"
@@ -60,7 +158,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Payments owned by the requested userId. Returns an empty array when that user has no payments.",
             "content": {
               "application/json": {
                 "schema": {
@@ -71,20 +169,42 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token."
+          },
+          "403": {
+            "description": "Requires support or admin role."
           }
-        }
+        },
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     }
   },
   "info": {
     "title": "Payments Service",
-    "description": "Payments service API for the genxapi ecosystem demo",
-    "version": "0.2.0",
+    "description": "Payments service API for the genxapi ecosystem demo. Protected routes use a demo HS256 bearer JWT. customer can read only /me/payments. support and admin can read internal /payments routes and user payment lookups.",
+    "version": "0.4.0",
     "contact": {}
   },
   "tags": [],
   "servers": [],
   "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Demo HS256 bearer token. Required claims: sub (numeric user id), role (customer|support|admin), email, name, iss, aud."
+      }
+    },
     "schemas": {
       "HealthCheckResponse": {
         "type": "object",
@@ -160,9 +280,9 @@
             "description": "External transaction reference"
           },
           "createdAt": {
-            "format": "date-time",
             "type": "string",
-            "example": "2025-02-01T10:15:00Z"
+            "example": "2025-02-01T10:15:00Z",
+            "format": "date-time"
           }
         },
         "required": [

@@ -1,21 +1,25 @@
 # genxapi-ecosystem-payments-sdk
 
-This package contains generated API clients produced by `@genxapi/cli` using the Orval toolchain.
+Generated payments client plus a thin handwritten runtime adapter.
 
-## Clients
+## Generated vs handwritten
 
-| Client | OpenAPI Source | Base URL | Description |
-| ------ | -------------- | -------- | ----------- |
-| payments | [Payments Service](./docs/contracts/payments-service/latest.json) | http://localhost:3002 | Payments service API for the genxapi ecosystem demo |
+- `src/payments/**` and `swagger-spec.json` are generated from the published contract
+- `src/runtime.ts`, `src/sdk.ts`, and `src/index.ts` are handwritten runtime bindings
 
 ## Usage
 
-Install dependencies and regenerate clients:
+```ts
+import { createPaymentsSdk } from 'genxapi-ecosystem-payments-sdk';
 
-```bash
-npm install
-npm run generate-clients
+const paymentsSdk = createPaymentsSdk({
+  baseUrl: 'https://api.example.com/payments',
+  accessToken: async () => session.token,
+});
 ```
 
-The generated Orval configuration is available at `orval.config.ts`.
+Regenerate from the published contract:
 
+```bash
+npx nx run payments-sdk:generate
+```
