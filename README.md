@@ -1,231 +1,194 @@
-# Genxapi Ecosystem Demo
+# GenX API Ecosystem Demo
 
-This repository demonstrates the intended GenX API adoption model inside an Nx monorepo:
+This repository is a presentation-ready proof of the GenX API ecosystem inside an Nx monorepo.
 
-1. a backend team owns and releases a NestJS service
-2. Swagger/OpenAPI is part of that service lifecycle
-3. the released contract is published as a service-owned artefact
-4. GenX API consumes that published contract
-5. GenX API generates an SDK package
-6. consumer apps adopt the SDK package explicitly
+It demonstrates one clear boundary:
 
-At the current stage, `web-app` is the only consumer making live authenticated SDK calls. `backoffice-app` and `mobile-app` expose the same auth-service and SDK bootstrap shape but still stop short of full UI flows.
+- backend services own Swagger and contract publication
+- GenX API starts from those published contracts
+- generated SDK packages remain independent deliverables
+- consumer apps adopt the SDKs through normal package boundaries
 
-## Ownership Boundary
+The demo now includes three services, three consumers, and role-aware JWT personas:
 
-- Backend service version:
-  owned by the backend service lifecycle
-- OpenAPI contract version:
-  aligned with the backend service version
-- Published contract artefact:
-  owned by the backend service lifecycle
-- SDK package version:
-  owned by the SDK release lifecycle
-- Consumer dependency upgrades:
-  owned by the consuming application lifecycle
+- `web-app`: customer self-service in the browser
+- `mobile-app`: customer self-service in Expo / React Native
+- `backoffice-app`: internal operations for support and admin users
 
-GenX API starts only after the contract has already been published.
+## What This Repository Demonstrates
 
-## Repository Shape
+- `auth-service`, `users-service`, and `payments-service` own their contracts and publish versioned snapshots under `docs/contracts/`
+- GenX API reads those published snapshots through `genxapi.users.config.json` and `genxapi.config.json`
+- `sdk/users-sdk` and `sdk/payments-sdk` are generated packages, not handwritten app clients
+- the customer apps and the backoffice app all adopt those SDKs explicitly
+- JWT claims decide which app flows are valid for each persona
 
-- `apps/users-service`
-  - NestJS service on port `3001`
-  - owns Swagger generation and contract publication
-- `apps/payments-service`
-  - NestJS service on port `3002`
-  - owns Swagger generation and contract publication
-- `apps/auth-service`
-  - NestJS service on port `3003`
-  - owns login, JWT issuance, and contract publication
-- `docs/contracts/users-service`
-  - published users-service contract artefacts
-- `docs/contracts/payments-service`
-  - published payments-service contract artefacts
-- `docs/contracts/auth-service`
-  - published auth-service contract artefacts
-- `sdk/users-sdk`
-  - generated from the published users-service contract
-- `sdk/payments-sdk`
-  - generated from the published payments-service contract
-- `libs/auth-client`
-  - shared auth-service client helpers and session types for consumers
-- `apps/web-app`
-  - consumer app that imports SDK packages through normal package boundaries
-- `apps/backoffice-app`
-  - internal consumer stub showing the auth-service and SDK bootstrap shape
-- `apps/mobile-app`
-  - mobile consumer stub showing the auth-service and SDK bootstrap shape
+## Ecosystem Flow
 
-## Backend Contract Lifecycle
+```mermaid
+flowchart LR
+  A["Service owns Swagger + version"] --> B["Published contract snapshot in docs/contracts"]
+  B --> C["GenX API config"]
+  C --> D["Generated SDK package in sdk/"]
+  D --> E["web-app"]
+  D --> F["mobile-app"]
+  D --> G["backoffice-app"]
+  H["auth-service JWT personas"] --> E
+  H --> F
+  H --> G
+```
 
-Each service resolves Swagger `info.version` from its own `package.json` version.
+1. A backend team ships a service and publishes a contract snapshot.
+2. GenX API consumes that published snapshot, not the live service.
+3. GenX API generates SDK packages from the published contract.
+4. Consumer apps adopt those SDK packages and inject runtime base URLs plus bearer tokens at the app boundary.
 
-The services keep normal NestJS Swagger behavior:
+## Repository Tour
 
-- Swagger UI at `/swagger`
-- Swagger JSON at `/swagger-json`
-- Nx `export-swagger` targets for local export
+| Path | Role in the demo |
+| --- | --- |
+| `apps/auth-service` | Issues JWTs for seeded customer, support, and admin personas |
+| `apps/users-service` | Owns the users contract and user-facing plus internal user routes |
+| `apps/payments-service` | Owns the payments contract and customer plus internal payment routes |
+| `docs/contracts/*` | Published service-owned contract snapshots used as GenX API inputs |
+| `genxapi.users.config.json` | GenX API config for the users SDK, pointed at the published users contract |
+| `genxapi.config.json` | GenX API config for the payments SDK, pointed at the published payments contract |
+| `sdk/users-sdk` | Generated users SDK package consumed by apps |
+| `sdk/payments-sdk` | Generated payments SDK package consumed by apps |
+| `libs/auth-client` | Shared auth-service client helpers and session types |
+| `apps/web-app` | Customer self-service browser app using `/me` and `/me/payments` |
+| `apps/mobile-app` | Second customer consumer using the same role-aware customer scope in Expo |
+| `apps/backoffice-app` | Internal support/admin app using `/users`, `/users/:id`, and admin-only `/payments` |
 
-Published contracts are created with dedicated service-owned targets:
+## Consumer Apps
 
-- `nx run auth-service:publish-contract`
-- `nx run users-service:publish-contract`
-- `nx run payments-service:publish-contract`
+| App | Audience | Main routes or views | What it proves |
+| --- | --- | --- | --- |
+| `web-app` | Customer | `/profile`, `/payments` | Customer self-service can adopt generated SDKs without exposing internal routes |
+| `mobile-app` | Customer | `My Profile`, `My Payments` tabs | A second customer consumer can reuse the same contracts and SDK boundary in a different runtime |
+| `backoffice-app` | Support and admin | `/users`, `/users/:userId`, admin-only `/payments` | Internal operations can adopt the same published-contract workflow while keeping role-aware routing |
 
-These targets model a backend release concern. In a real service pipeline, they should run as part of the service release workflow after the service version has been resolved, not as part of SDK generation.
+## JWT Personas
 
-Those targets publish into:
+`auth-service` seeds four demo accounts and returns JWTs with the role claims the apps use for routing and SDK calls.
 
-- `docs/contracts/<service>/<version>.json`
-- `docs/contracts/<service>/latest.json`
+| Persona | Role | Credentials | Use it in | What to show |
+| --- | --- | --- | --- | --- |
+| Bob Smith | `customer` | `bob.smith@example.com` / `bob-demo-password` | `web-app`, `mobile-app` | Profile plus two payment records, including a refund |
+| Ethan Williams | `customer` | `ethan.williams@example.com` / `ethan-demo-password` | `web-app`, `mobile-app` | Simpler customer path with one completed payment |
+| Diana Miller | `support` | `diana.miller@example.com` / `diana-demo-password` | `backoffice-app` | Users list, user detail, and user-scoped payment investigation |
+| Alice Johnson | `admin` | `alice.johnson@example.com` / `alice-demo-password` | `backoffice-app` | Full internal workflow, including the global payments queue |
 
-`latest.json` is only a convenience alias for local development. The documented CI path resolves that alias to `docs/contracts/<service>/<version>.json` and generates the SDK from the pinned versioned snapshot.
+Role expectations:
 
-## Where GenX API Adds Value
+- `customer` claims are valid in `web-app` and `mobile-app`
+- `support` and `admin` claims are valid in `backoffice-app`
+- customer claims are rejected from internal backoffice routes
+- support can inspect a specific user's payments, but only admin can browse the global payments queue
 
-GenX API does not create or publish the contract in this demo.
+## Quick Start
 
-It starts from the published contract snapshot:
-
-- `genxapi.users.config.json` reads `docs/contracts/users-service/latest.json`
-- `genxapi.config.json` reads `docs/contracts/payments-service/latest.json`
-
-That keeps contract production and SDK generation clearly separated locally, while CI pins generation to an immutable versioned contract file for reproducibility.
-
-## Local Demo Flow
-
-Install dependencies:
+Install dependencies, publish the current contracts, build the generated SDKs, then run the browser demo:
 
 ```bash
 npm install
-```
-
-Publish the current service contracts:
-
-```bash
-nx run auth-service:publish-contract
-nx run users-service:publish-contract
-nx run payments-service:publish-contract
-```
-
-For the demo, those commands simulate the service release pipeline. They are not meant to imply that consumer apps or GenX API own contract publication.
-
-Generate and build the SDK packages:
-
-```bash
-nx run users-sdk:build
-nx run payments-sdk:build
-```
-
-Run the services and the consumer app:
-
-```bash
-npm run serve:demo
+npm run demo:prepare
+npm run demo:serve
 ```
 
 Open:
 
-- Web app: `http://localhost:4200`
-- Backoffice app: `http://localhost:4300`
-- Auth Swagger UI: `http://localhost:3003/swagger`
-- Users Swagger UI: `http://localhost:3001/swagger`
-- Payments Swagger UI: `http://localhost:3002/swagger`
+| Surface | URL |
+| --- | --- |
+| Web app | `http://localhost:4200` |
+| Backoffice app | `http://localhost:4300` |
+| Auth Swagger UI | `http://localhost:3003/swagger` |
+| Users Swagger UI | `http://localhost:3001/swagger` |
+| Payments Swagger UI | `http://localhost:3002/swagger` |
 
-## Demo Credentials
+What `demo:prepare` does:
 
-`web-app` now boots customer sessions with one-click demo personas backed by seeded `auth-service` accounts:
+- publishes the current service contracts through each service-owned `publish-contract` target
+- rebuilds both SDK packages from those published contracts
 
-- Customer: `bob.smith@example.com` / `bob-demo-password`
-- Customer: `ethan.williams@example.com` / `ethan-demo-password`
+That preserves the real story instead of hiding contract publication and SDK generation inside app startup.
 
-Support and admin accounts still exist in `auth-service`, but they are intentionally no longer part of the customer-facing `web-app` flow:
+## Optional Mobile Demo
 
-- Support: `diana.miller@example.com` / `diana-demo-password`
-- Admin: `alice.johnson@example.com` / `alice-demo-password`
+The mobile app is intentionally separate from `demo:serve` because Expo needs explicit runtime URLs instead of the Vite proxy setup used by the browser apps.
 
-Those internal personas now drive the operational workflows in `backoffice-app`.
-
-## Useful Commands
-
-Export service Swagger locally:
+Start the services first with `npm run demo:serve`, then configure and run Expo:
 
 ```bash
-nx run auth-service:export-swagger
-nx run users-service:export-swagger
-nx run payments-service:export-swagger
+cp apps/mobile-app/.env.example apps/mobile-app/.env
+npm run demo:serve:mobile
 ```
 
-Publish service-owned contracts:
+Default local values in `apps/mobile-app/.env.example` point at:
 
-```bash
-nx run auth-service:publish-contract
-nx run users-service:publish-contract
-nx run payments-service:publish-contract
-```
+- `http://127.0.0.1:3003` for `auth-service`
+- `http://127.0.0.1:3001` for `users-service`
+- `http://127.0.0.1:3002` for `payments-service`
 
-Generate SDKs from published contracts:
+If you are testing on a physical device, replace `127.0.0.1` with your machine's LAN IP.
 
-```bash
-nx run users-sdk:generate
-nx run payments-sdk:generate
-```
+## Root Scripts
 
-Those local generate targets use `latest.json` for convenience. The GitHub SDK workflows first resolve `latest.json` to a pinned `docs/contracts/<service>/<version>.json` snapshot and then generate from that immutable contract.
+| Command | Purpose |
+| --- | --- |
+| `npm run demo:contracts` | Publish all service-owned contracts into `docs/contracts/` |
+| `npm run demo:sdks` | Rebuild both SDK packages from the published contracts |
+| `npm run demo:prepare` | Run contract publication and SDK rebuild in the recommended order |
+| `npm run demo:serve` | Start `auth-service`, `users-service`, `payments-service`, `web-app`, and `backoffice-app` |
+| `npm run demo:serve:mobile` | Start the Expo mobile app |
+| `npm run build:browser-apps` | Verify `web-app` and `backoffice-app` compile against the built SDK packages |
+| `npm run graph` | Inspect the Nx dependency graph |
 
-Build the SDK packages:
+## Recommended Live Demo Flow
 
-```bash
-nx run users-sdk:build
-nx run payments-sdk:build
-```
+1. Start with the backend ownership story.
+   Show the Swagger UIs for `auth-service`, `users-service`, and `payments-service`, then point to `docs/contracts/<service>/latest.json` as the published contract snapshot.
+2. Show the GenX API handoff.
+   Open `genxapi.users.config.json` and `genxapi.config.json`, then point to `sdk/users-sdk` and `sdk/payments-sdk` as the generated downstream packages.
+3. Show customer self-service in `web-app`.
+   Use Bob Smith first because his account shows both normal payment history and a refund. Switch to Ethan Williams if you want a simpler customer example.
+4. Show internal operations in `backoffice-app`.
+   Sign in as Diana Miller to show support access to `/users` and user-scoped payment history, then show that `/payments` is blocked. Switch to Alice Johnson to unlock the full payments queue.
+5. Optionally show `mobile-app` as the second customer consumer.
+   Use Bob or Ethan again to prove that the same published-contract and generated-SDK story works in a React Native shell as well.
 
-Build the consumer apps:
+That sequence keeps the lifecycle obvious:
 
-```bash
-nx build web-app
-nx build backoffice-app
-```
+service publishes contract -> GenX API generates SDK -> multiple apps adopt the SDK
 
-Inspect the project graph:
+## What Each App Should Show
 
-```bash
-nx graph
-```
+| App | Persona | Expected result |
+| --- | --- | --- |
+| `web-app` | Bob or Ethan | Customer session picker, then `My Profile` and `My Payments` powered by `/me` routes |
+| `web-app` | Support or admin token | Prompt to switch back to a customer persona |
+| `mobile-app` | Bob or Ethan | Same customer-only profile and payment flows in Expo |
+| `mobile-app` | Missing env | Persona buttons stay disabled until all `EXPO_PUBLIC_*` URLs are configured |
+| `backoffice-app` | Diana | Users directory, user detail, and user-level payments only |
+| `backoffice-app` | Alice | Same internal routes plus the admin-only global payments queue |
+| `backoffice-app` | Customer token | Prompt to switch to a support or admin persona |
 
-## Current Scope
+## Architecture Notes
 
-Integrated now:
+- `publish-contract` belongs to the backend service lifecycle, not to GenX API generation and not to consumer startup
+- `latest.json` is a local-development convenience alias; reproducible automation should pin `docs/contracts/<service>/<version>.json`
+- backend service version and OpenAPI contract version stay aligned
+- SDK package versioning remains an independent downstream concern
+- apps own session storage, runtime base URLs, and bearer-token injection
+- this repository uses `docs/contracts/` as a local contract registry for the demo
 
-- service-owned Swagger generation
-- service-owned contract publication
-- auth-service login and JWT issuance
-- GenX API generation from published contracts
-- independently releasable SDK packages
-- explicit package consumption in `web-app`
-- explicit package consumption in `backoffice-app`
-- app-owned session storage in `web-app`
-- app-owned session storage in `backoffice-app`
-- internal role-aware routing and navigation in `backoffice-app`
-- shared auth-service client helpers under `libs/auth-client`
+## Honest Scope Notes
 
-Not yet integrated:
+- The contract registry in this repo is local and file-based for demo clarity.
+- The mobile app is optional in the default demo flow because Expo needs separate runtime configuration.
+- There is still no release automation layer such as Nx Release or semantic-release in this repository.
 
-- `mobile-app` login flow
-- `mobile-app` making live SDK requests
-- a backend release automation tool such as semantic-release or Nx Release
-
-If this repository migrates to Nx Release later, keep services and SDK packages in separate release groups so backend service versioning and SDK package versioning remain independent.
-
-## Runtime Adoption
-
-The repo now keeps one shared consumer-side convention for auth and SDK wiring:
-
-- consumers authenticate against `auth-service`
-- each app keeps its own session storage and backend URLs
-- SDK packages are created once with a bearer token provider from that session
-- shared auth request helpers live in `libs/auth-client`
-
-## More Detail
+## Supporting Docs
 
 - [docs/current-stage.md](docs/current-stage.md)
 - [docs/contract-versioning.md](docs/contract-versioning.md)
