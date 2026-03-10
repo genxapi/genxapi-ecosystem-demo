@@ -2,7 +2,7 @@ import { createAuthClient } from '@genxapi/ecosystem-auth-client';
 import { createUsersSdk } from '@genxapi/ecosystem-users-sdk';
 import { createPaymentsSdk } from 'genxapi-ecosystem-payments-sdk';
 
-type AccessTokenProvider =
+export type MobileAccessTokenProvider =
   | string
   | null
   | undefined
@@ -24,7 +24,7 @@ export const mobileAuthClient = createAuthClient({
   baseUrl: mobileAuthServiceBaseUrl,
 });
 
-export const createMobileSdks = (accessToken: AccessTokenProvider) => ({
+export const createMobileSdks = (accessToken: MobileAccessTokenProvider) => ({
   users: createUsersSdk({
     baseUrl: mobileUsersServiceBaseUrl,
     accessToken,
@@ -42,3 +42,5 @@ export const mobileRuntimeWarnings = [
     ? 'Set EXPO_PUBLIC_PAYMENTS_SERVICE_BASE_URL for payments-service.'
     : '',
 ].filter(Boolean);
+
+export const isMobileRuntimeReady = mobileRuntimeWarnings.length === 0;
